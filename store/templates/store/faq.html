@@ -1,0 +1,133 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 800px; margin-top: 60px; margin-bottom: 80px;">
+    
+    <div style="text-align: center; margin-bottom: 50px;">
+        <h1 style="color: #333; font-weight: 800;">Frequently Asked Questions</h1>
+        <p style="color: #666; font-size: 1.1rem;">Everything you need to know about ordering with us.</p>
+    </div>
+
+    <div class="faq-container">
+        
+        <div class="faq-item">
+            <button class="faq-question">
+                How long does shipping take?
+                <span class="icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Orders usually arrive within <strong>15 to 20 days</strong> after confirmation. We handle all customs and shipping procedures for you.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">
+                Is there an extra fee for weight?
+                <span class="icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>No! Unlike others, we offer <strong>FREE weight fees</strong> for orders under 10kg. You only pay the product price (calculated at our 1.20 rate) + local delivery fee.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">
+                How do I pay?
+                <span class="icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>We use a <strong>Cash on Delivery (COD)</strong> system. You don't need a credit card. You pay the total amount in IQD when the courier delivers your package to your doorstep.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">
+                Can I cancel my order?
+                <span class="icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Yes, you can cancel your order while it is in "Pending" status. Once the order is "Approved" or "Shipped", cancellation is not possible as the items have already been purchased.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">
+                How does the Dalin Points system work?
+                <span class="icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Every time you order, you earn points! <strong>1000 IQD spent = 1 Point</strong>. You can use these points to get discounts on your future orders. 1 Point gives you a 25 IQD discount.</p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    // Akordeon Aç/Kapa Mantığı
+    var acc = document.getElementsByClassName("faq-question");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+                this.querySelector('.icon').innerText = "+";
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+                this.querySelector('.icon').innerText = "-";
+            } 
+        });
+    }
+</script>
+
+<style>
+    .faq-item {
+        margin-bottom: 15px;
+        border-bottom: 1px solid #eee;
+    }
+    .faq-question {
+        background-color: white;
+        color: #333;
+        cursor: pointer;
+        padding: 20px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: 0.4s;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 10px;
+    }
+    .faq-question:hover {
+        background-color: #f9f9f9;
+        color: #ff0055;
+    }
+    .faq-question.active {
+        color: #ff0055;
+    }
+    .faq-answer {
+        padding: 0 20px;
+        background-color: white;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+    }
+    .faq-answer p {
+        padding: 20px 0;
+        line-height: 1.6;
+        color: #555;
+    }
+    .icon {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}

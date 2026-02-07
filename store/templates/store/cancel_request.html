@@ -1,0 +1,36 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 500px; margin-top: 50px;">
+    <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
+        <h3 style="color: #dc3545; text-align: center;">Request Cancellation</h3>
+        <p style="text-align: center; color: #666;">
+            Order #{{ order.id }} - {{ order.total_price_iqd }} IQD
+        </p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div style="margin-bottom: 20px;">
+                <label style="font-weight: 600; display: block; margin-bottom: 5px;">Reason for Cancellation</label>
+                {{ form.reason }}
+            </div>
+            
+            <button type="submit" class="btn-cancel" style="width: 100%; cursor: pointer;">Send Request</button>
+            <a href="{% url 'my_orders' %}" style="display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none;">Go Back</a>
+        </form>
+    </div>
+</div>
+
+<style>
+    .btn-cancel {
+        background: #dc3545;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+    .btn-cancel:hover { background: #c82333; }
+</style>
+{% endblock %}

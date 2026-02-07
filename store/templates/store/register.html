@@ -1,0 +1,74 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <h2 class="auth-title">Create Account</h2>
+        <p class="auth-subtitle">Join us to start shopping from Shein easily.</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="input-group">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <small class="error-text">{{ field.errors.0 }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="btn-auth">🚀 Create Account</button>
+        </form>
+
+        <div class="auth-footer">
+            Already have an account? <a href="{% url 'login' %}">Login here</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .auth-wrapper {
+        min-height: 85vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #fff0f5 0%, #ffffff 100%);
+    }
+    .auth-card {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        width: 100%;
+        max-width: 450px;
+        border-top: 5px solid #ff0055; /* Marka çizgisi */
+    }
+    .auth-title { text-align: center; color: #333; margin-bottom: 10px; font-weight: 800; }
+    .auth-subtitle { text-align: center; color: #777; margin-bottom: 30px; font-size: 0.95rem; }
+    
+    .input-group { margin-bottom: 20px; }
+    .input-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #444; }
+    .form-control { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; transition: 0.3s; }
+    .form-control:focus { border-color: #ff0055; outline: none; box-shadow: 0 0 0 3px rgba(255, 0, 85, 0.1); }
+    
+    .btn-auth {
+        width: 100%;
+        padding: 15px;
+        background: #333;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .btn-auth:hover { background: #ff0055; transform: translateY(-2px); }
+    
+    .auth-footer { text-align: center; margin-top: 25px; font-size: 0.9rem; color: #666; border-top: 1px solid #eee; padding-top: 20px; }
+    .auth-footer a { color: #ff0055; font-weight: bold; text-decoration: none; }
+    .error-text { color: red; font-size: 0.8rem; display: block; margin-top: 5px; }
+</style>
+{% endblock %}

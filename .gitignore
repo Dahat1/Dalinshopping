@@ -1,0 +1,15 @@
+# Veritabanını yoksay (Temiz başlangıç için)
+db.sqlite3
+
+# Gereksiz sistem dosyaları
+__pycache__/
+*.pyc
+.DS_Store
+
+# Sanal ortam (Varsa)
+venv/
+env/
+.env
+
+# Medya dosyaları (Müşteri resimleri sunucuda kalmalı, GitHub'a gitmemeli)
+media/

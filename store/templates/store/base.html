@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dalin Shopping | Easy Shein Orders</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* GENEL AYARLAR */
+        body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; background-color: #f8f9fa; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
+        
+        /* NAVBAR */
+        .navbar { 
+            background-color: white; 
+            padding: 15px 5%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+            position: relative;
+            z-index: 1000;
+        }
+        .logo { font-size: 1.5rem; font-weight: 800; color: #ff0055; text-decoration: none; letter-spacing: -1px; }
+        .nav-links { list-style: none; display: flex; gap: 20px; align-items: center; margin: 0; padding: 0; }
+        .nav-links a { text-decoration: none; color: #333; font-weight: 500; transition: 0.3s; font-size: 0.95rem; }
+        .nav-links a:hover { color: #ff0055; }
+        
+        .btn-primary { background: #ff0055; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; }
+        .btn-primary:hover { background: #d60045; }
+
+        /* CONTENT */
+        .content-wrapper { flex: 1; } /* Footer'ı aşağı itmek için */
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+        
+        /* FOOTER */
+        footer { 
+            background: #1a1a1a; color: #ccc; padding: 50px 0 20px 0; 
+            margin-top: 50px; font-size: 0.9rem;
+        }
+        .footer-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px; max-width: 1100px; margin: 0 auto; padding: 0 20px;
+        }
+        .footer-col h4 { color: white; margin-bottom: 20px; font-size: 1.1rem; }
+        .footer-col ul { list-style: none; padding: 0; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul li a { color: #999; text-decoration: none; transition: 0.3s; }
+        .footer-col ul li a:hover { color: #ff0055; padding-left: 5px; }
+        .footer-bottom { text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px; color: #666; }
+
+        /* FORM INPUTS */
+        .form-control {
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;
+            font-size: 1rem; box-sizing: border-box; font-family: 'Poppins', sans-serif;
+        }
+
+        /* --- MOBİL UYUMLULUK (NAVBAR DÜZELTMESİ) --- */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column; /* Alt alta diz */
+                padding: 15px 20px;
+                gap: 15px;
+            }
+            .nav-links {
+                width: 100%;
+                justify-content: center; /* Ortala */
+                flex-wrap: wrap; /* Sığmazsa aşağı geçsin */
+                gap: 15px;
+            }
+            .nav-links li {
+                margin: 5px 0;
+            }
+            .logo { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="logo">Dalin Shopping</a>
+        <ul class="nav-links">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'faq' %}">FAQ</a></li> 
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'my_orders' %}">📦 Orders</a></li>
+                <li><a href="{% url 'profile' %}" style="font-weight: bold; color: #333;">👤 {{ user.username }}</a></li>
+                <li><a href="{% url 'logout' %}" style="color: red;">Logout</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'register' %}" class="btn-primary">Sign Up</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <div class="content-wrapper">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <a href="https://wa.me/9647507640707" target="_blank" class="whatsapp-float">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <style>
+        .whatsapp-float {
+            position: fixed; bottom: 20px; right: 20px;
+            background-color: #25d366; color: #FFF; border-radius: 50%;
+            text-align: center; font-size: 30px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            z-index: 100; width: 60px; height: 60px;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s; text-decoration: none;
+        }
+        .whatsapp-float:hover { transform: scale(1.1); box-shadow: 2px 2px 15px rgba(0,0,0,0.3); }
+    </style>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Dalin Shopping</h4>
+                <p>The easiest way to shop from Shein in Iraq. Best rates, no hidden fees, fast delivery.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'create_order' %}">New Order</a></li>
+                    <li><a href="{% url 'my_orders' %}">Track Order</a></li>
+                    <li><a href="{% url 'profile' %}">My Profile</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Help Center</h4>
+                <ul>
+                    <li><a href="{% url 'faq' %}">FAQ</a></li>
+                    <li><a href="https://wa.me/9647507640707">Contact Support</a></li>
+                    <li><a href="#">Shipping Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Dalin Shopping. All rights reserved. Made with ❤️ in Erbil.
+        </div>
+    </footer>
+
+</body>
+</html>

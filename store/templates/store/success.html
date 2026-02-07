@@ -1,0 +1,16 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container" style="text-align: center; margin-top: 100px;">
+    <div style="background: white; padding: 50px; border-radius: 20px; display: inline-block; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+        <h1 style="font-size: 4rem; margin: 0;">🎉</h1>
+        <h2 style="color: #333; margin-top: 20px;">Order Received!</h2>
+        <p style="color: #666; font-size: 1.1rem;">Thank you! We have received your order details.</p>
+        <p style="color: #666;">Please check "My Orders" to see the total price in IQD.</p>
+        
+        <div style="margin-top: 30px;">
+            <a href="{% url 'home' %}" class="btn-primary" style="margin-right: 10px;">Back to Home</a>
+            </div>
+    </div>
+</div>
+{% endblock %}

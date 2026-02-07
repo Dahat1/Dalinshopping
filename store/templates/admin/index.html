@@ -1,0 +1,239 @@
+{% extends "admin/index.html" %}
+{% load static %}
+{% load admin_dashboard %}
+
+{% block content %}
+{% get_dashboard_stats as stats %}
+
+<style>
+    /* GENEL */
+    .dashboard-wrapper { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 1400px; margin: 0 auto; }
+    
+    /* 1. ÜST KARTLAR (KPI) */
+    .kpi-grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+        gap: 20px; 
+        margin-bottom: 30px; 
+    }
+    
+    .kpi-card { 
+        background: white; 
+        padding: 25px; 
+        border-radius: 12px; 
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+        border-left: 6px solid #ccc;
+        transition: transform 0.2s; 
+    }
+    .kpi-card:hover { transform: translateY(-5px); }
+    
+    .kpi-title { 
+        font-size: 0.85rem; 
+        text-transform: uppercase; 
+        color: #777; 
+        font-weight: 700; 
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+    }
+    
+    .kpi-value { 
+        font-size: 2rem; 
+        font-weight: 800; 
+        margin: 5px 0; 
+        color: #222; 
+    }
+    
+    .kpi-sub { 
+        font-size: 0.85rem; 
+        color: #555; 
+        font-weight: 500;
+    }
+
+    /* RENKLER */
+    .border-green { border-color: #2ecc71; }
+    .val-green { color: #27ae60; }
+    
+    .border-purple { border-color: #9b59b6; background: #fdfaff; }
+    .val-purple { color: #8e44ad; }
+
+    .border-orange { border-color: #e67e22; }
+    .border-blue { border-color: #3498db; }
+    .val-blue { color: #2980b9; }
+
+    /* 2. PIPELINE */
+    .pipeline-container { 
+        display: flex; 
+        justify-content: space-between; 
+        background: white; 
+        padding: 25px; 
+        border-radius: 12px; 
+        margin-bottom: 30px; 
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+        flex-wrap: wrap; 
+        gap: 20px; 
+    }
+    
+    .pipeline-item { 
+        text-align: center; 
+        flex: 1; 
+        min-width: 120px; 
+        padding: 10px;
+        border-radius: 8px;
+        background: #f8f9fa;
+    }
+    
+    .pipe-count { font-size: 1.8rem; font-weight: bold; display: block; color: #333; }
+    .pipe-label { font-size: 0.9rem; color: #666; font-weight: 600; text-transform: uppercase; margin-top: 5px; }
+
+    .status-pending { color: #d35400; background: #fff5e6; }
+    .status-active { color: #2980b9; background: #eaf6ff; }
+    .status-delivered { color: #27ae60; background: #e8f8f5; }
+
+    /* 3. TABLOLAR */
+    .tables-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 30px; margin-bottom: 40px; }
+    
+    .data-box { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .box-header { font-size: 1.2rem; font-weight: bold; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #f1f1f1; display: flex; justify-content: space-between; color: #333; }
+    
+    .mini-table { width: 100%; border-collapse: collapse; }
+    .mini-table th { text-align: left; color: #888; font-size: 0.85rem; padding-bottom: 12px; text-transform: uppercase; }
+    .mini-table td { padding: 12px 0; border-bottom: 1px solid #f1f1f1; font-size: 0.95rem; color: #333; font-weight: 500; }
+    
+    .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; display: inline-block; }
+    .bg-pending { background: #fff3cd; color: #856404; }
+    .bg-delivered { background: #d4edda; color: #155724; }
+    .bg-active { background: #d1ecf1; color: #0c5460; }
+    .bg-draft { background: #e2e3e5; color: #383d41; }
+    
+    .btn-action { text-decoration: none; background: #333; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; color: white; transition: 0.3s; }
+    .btn-action:hover { background: #ff0055; }
+
+</style>
+
+<div class="dashboard-wrapper">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <h2 style="margin: 0; color: #333; font-weight: 800;">🚀 God Mode Dashboard</h2>
+        <span style="font-size: 0.9rem; background: #eee; padding: 5px 15px; border-radius: 20px; color: #555;">
+            Market Rate: 1$ = 1450 IQD
+        </span>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card border-green">
+            <div class="kpi-title">Total Revenue (Kasa)</div>
+            <div class="kpi-value val-green">{{ stats.revenue_iqd|floatformat:0 }} IQD</div>
+            <div class="kpi-sub">Total collected from customers</div>
+        </div>
+
+        <div class="kpi-card border-purple">
+            <div class="kpi-title">🔥 Real Net Profit</div>
+            <div class="kpi-value val-purple">{{ stats.net_profit|floatformat:0 }} IQD</div>
+            <div class="kpi-sub">Revenue - (Actual Cost * 1450)</div>
+        </div>
+
+        <div class="kpi-card border-orange">
+            <div class="kpi-title">Pending Orders</div>
+            <div class="kpi-value" style="color: #d35400;">{{ stats.count_pending }}</div>
+            <div class="kpi-sub">Waiting for approval</div>
+        </div>
+        
+        <div class="kpi-card border-blue">
+            <div class="kpi-title">Active / Transit</div>
+            <div class="kpi-value val-blue">{{ stats.count_active }}</div>
+            <div class="kpi-sub">Dubai & Shipping</div>
+        </div>
+    </div>
+
+    <div class="pipeline-container">
+        <div class="pipeline-item">
+            <span class="pipe-count">{{ stats.count_draft }}</span>
+            <span class="pipe-label">Draft 🛒</span>
+        </div>
+        <div class="pipeline-item status-pending">
+            <span class="pipe-count">{{ stats.count_pending }}</span>
+            <span class="pipe-label">Pending ⏳</span>
+        </div>
+        <div class="pipeline-item status-active">
+            <span class="pipe-count">{{ stats.count_active }}</span>
+            <span class="pipe-label">In Transit ✈️</span>
+        </div>
+        <div class="pipeline-item status-delivered">
+            <span class="pipe-count">{{ stats.count_delivered }}</span>
+            <span class="pipe-label">Delivered ✅</span>
+        </div>
+    </div>
+
+    <div class="tables-grid">
+        
+        <div class="data-box">
+            <div class="box-header">
+                <span>🆕 Recent Orders</span>
+                <a href="/admin/store/order/" style="font-size: 0.9rem; color: #3498db; text-decoration: none;">View All →</a>
+            </div>
+            <table class="mini-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in stats.recent_orders %}
+                    <tr>
+                        <td>#{{ order.id }}</td>
+                        <td>{{ order.user.username|truncatechars:10 }}</td>
+                        <td style="font-weight: bold;">{{ order.total_price_iqd|floatformat:0 }}</td>
+                        <td>
+                            <span class="status-badge {% if order.status == 'pending' %}bg-pending{% elif order.status == 'delivered' %}bg-delivered{% elif order.status == 'approved' %}bg-active{% else %}bg-draft{% endif %}">
+                                {{ order.get_status_display }}
+                            </span>
+                        </td>
+                        <td style="text-align: right;"><a href="/admin/store/order/{{ order.id }}/change/" class="btn-action">Edit</a></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" style="text-align: center; color: #999;">No orders yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="data-box">
+            <div class="box-header">
+                <span>👑 Top 5 VIP Customers</span>
+            </div>
+            <table class="mini-table">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Total Spent (IQD)</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in stats.top_customers %}
+                    <tr>
+                        <td style="font-weight: bold; color: #333;">{{ user.username }}</td>
+                        <td style="color: #27ae60; font-weight: 800;">{{ user.total_spent|default:"0"|floatformat:0 }}</td>
+                        <td>💎 {{ user.profile.dalin_points }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3" style="text-align: center; color: #999;">No sales yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<div style="margin-top: 60px; border-top: 1px dashed #ccc; padding-top: 20px; opacity: 0.8;">
+    <h4 style="color: #888; margin-bottom: 20px;">🛠️ Standart Yönetim Paneli</h4>
+    {{ block.super }}
+</div>
+
+{% endblock %}
