@@ -7,50 +7,48 @@
     <title>{{ t.meta_title }}</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Montserrat:wght@400;600;700;800;900&family=Noto+Sans+Arabic:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
     <style>
-        /* --- RENK PALETİ TANIMLARI (CSS VARIABLES) --- */
+        /* --- RENK PALETİ (CSS VARIABLES) --- */
         :root {
-            /* === LIGHT MODE (VARSAYILAN) === */
-            --bg-body: #FAFAFA;         /* Kırık Beyaz */
-            --bg-surface: #FFFFFF;      /* Kartlar/Menüler için Tam Beyaz */
-            --bg-bar: #F0F0F0;          /* Sosyal bar için hafif gri */
-            
-            --color-main: #FFC2C7;      /* Canlı Soft Pembe */
-            --color-accent: #FF8FA3;    /* Mercan Pembesi (Butonlar) */
-            --text-main: #1A202C;       /* Lacivert-Siyah */
-            --text-muted: #555555;      /* Gri Yazılar */
-            
-            --border-color: #E2E8F0;    /* İnce çizgiler */
+            --bg-body: #FAFAFA;
+            --bg-surface: #FFFFFF;
+            --bg-bar: #F0F0F0;
+            --color-main: #FFC2C7;
+            --color-accent: #FF8FA3;
+            --text-main: #1A202C;
+            --text-muted: #555555;
+            --border-color: #E2E8F0;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
-        /* === DARK MODE === */
         body.dark-mode {
-            --bg-body: #1A202C;         /* Gece Mavisi Grisi */
-            --bg-surface: #2D3748;      /* Kartlar/Menüler (Yüzey) */
-            --bg-bar: #232b38;          /* Sosyal bar için koyu ton */
-            
-            --color-main: #FFD1D6;      /* Uçuk Pembe */
-            --color-accent: #FF9EB5;    /* Parlak Şeker Pembe (Butonlar) */
-            --text-main: #FFFFFF;       /* Beyaz */
-            --text-muted: #A0AEC0;      /* Açık Gri Yazılar */
-            
-            --border-color: #4A5568;    /* Koyu çizgiler */
+            --bg-body: #1A202C;
+            --bg-surface: #2D3748;
+            --bg-bar: #232b38;
+            --color-main: #FFD1D6;
+            --color-accent: #FF9EB5;
+            --text-main: #FFFFFF;
+            --text-muted: #A0AEC0;
+            --border-color: #4A5568;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
         }
 
-        /* --- GENEL AYARLAR --- */
+        /* --- GENEL AYARLAR & BOLD FIX --- */
         body { 
-            /* Font artık dile göre otomatik değişiyor (translations.py'den geliyor) */
-            font-family: {{ t.font }}; 
-            margin: 0; padding: 0; 
+            font-family: {{ t.font|safe }}; 
+            margin: 0; padding: 0; padding-bottom: 70px; /* Mobilde alt menü için boşluk */
             background-color: var(--bg-body); 
             color: var(--text-main); 
             display: flex; flex-direction: column; min-height: 100vh; 
-            transition: background-color 0.3s, color 0.3s; /* Yumuşak Geçiş Efekti */
+            transition: background-color 0.3s, color 0.3s;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
+
+        h1, h2, h3, h4, h5, h6 { font-weight: 800 !important; letter-spacing: -0.5px; margin-top: 0; }
         a { text-decoration: none; color: var(--text-main); transition: 0.3s; }
         a:hover { color: var(--color-accent); }
 
@@ -60,134 +58,115 @@
             padding: 15px 0; 
             box-shadow: var(--shadow); 
             position: sticky; top: 0; z-index: 1000;
-            transition: background-color 0.3s;
             border-bottom: 1px solid var(--border-color);
         }
-        
-        .nav-container {
-            max-width: 1100px; margin: 0 auto; padding: 0 20px;
-            display: flex; justify-content: space-between; align-items: center; width: 100%;
-        }
-
-        .logo { font-size: 1.6rem; font-weight: 800; color: var(--color-accent); letter-spacing: -1px; }
-
+        .nav-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .logo { font-size: 1.6rem; font-weight: 900 !important; color: var(--color-accent); letter-spacing: -1px; }
         .nav-right { display: flex; align-items: center; gap: 25px; }
         .nav-links { list-style: none; display: flex; gap: 20px; align-items: center; margin: 0; padding: 0; }
-        .nav-links a { color: var(--text-main); font-weight: 500; font-size: 1rem; }
-        .nav-links a:hover { color: var(--color-accent); }
+        .nav-links a { color: var(--text-main); font-weight: 700 !important; font-size: 1rem; }
         
-        /* RTL Düzeltmeleri */
-        body[dir="rtl"] .nav-links { padding-right: 0; }
         body[dir="rtl"] .settings-group { border-left: none; border-right: 1px solid var(--border-color); padding-left: 0; padding-right: 20px; }
 
         /* Butonlar */
-        .btn-primary { 
-            background: var(--color-accent); 
-            color: #fff !important; /* Buton yazısı hep beyaz kalsın */
-            padding: 10px 25px; border-radius: 30px; font-weight: 600; 
+        .btn-primary, .btn-hero, .btn-submit, .btn-confirm, .btn-login, .btn-auth, .btn-engine { 
+            background: var(--color-accent); color: #fff !important; 
+            padding: 10px 25px; border-radius: 30px; font-weight: 800 !important; 
             box-shadow: 0 4px 10px rgba(255, 143, 163, 0.4);
         }
-        .btn-primary:hover { 
-            background: var(--color-main); 
-            transform: translateY(-2px);
-        }
+        .btn-primary:hover { background: var(--color-main); transform: translateY(-2px); }
 
         /* --- SOCIAL BAR --- */
-        .social-bar {
-            background-color: var(--bg-bar);
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
-            transition: background-color 0.3s;
-        }
-        .social-container {
-            max-width: 1100px; margin: 0 auto; padding: 0 20px;
-            display: flex; justify-content: flex-start; gap: 25px; align-items: center; flex-wrap: wrap;
-        }
-        .social-link {
-            font-size: 14px; display: flex; align-items: center; gap: 8px; font-weight: 600;
-            color: var(--text-muted);
-            transition: transform 0.3s;
-        }
+        .social-bar { background-color: var(--bg-bar); padding: 12px 0; border-bottom: 1px solid var(--border-color); }
+        .social-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: flex-start; gap: 25px; align-items: center; flex-wrap: wrap; }
+        .social-link { font-size: 14px; display: flex; align-items: center; gap: 8px; font-weight: 800 !important; color: var(--text-muted); }
         .social-link i { font-size: 22px; }
-        .social-link:hover { transform: scale(1.1); color: var(--color-accent); }
 
-        /* İkon Renkleri */
-        .icon-whatsapp { color: #25D366; }
-        .icon-instagram { color: #E1306C; }
-        .icon-tiktok { color: var(--text-main); } 
-        .icon-snapchat { color: #FFD700; text-shadow: 0px 0px 1px #999; } 
-        .icon-linktree { color: #43E660; }
-
-        /* --- AYARLAR --- */
+        /* --- AYARLAR & DİL --- */
         .settings-group { display: flex; align-items: center; gap: 15px; border-left: 1px solid var(--border-color); padding-left: 20px; }
-        
-        /* Dil Seçici Stili */
-        .lang-form { margin: 0; display: flex; align-items: center; gap: 5px; }
-        .lang-btn { 
-            cursor: pointer; padding: 4px 8px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; border: none; background: transparent; color: var(--text-muted); transition: 0.3s;
-        }
-        .lang-btn:hover { color: var(--color-accent); }
-        /* Aktif dilin rengini değiştir */
+        .lang-btn { cursor: pointer; padding: 4px 8px; border-radius: 6px; font-size: 0.85rem; font-weight: 900 !important; border: none; background: transparent; color: var(--text-muted); }
         .lang-btn.active { background-color: var(--color-accent); color: white; }
-        
-        .theme-toggle { 
-            cursor: pointer; font-size: 20px; color: var(--text-main); background: none; border: none; transition: 0.3s; 
-        }
-        .theme-toggle:hover { transform: rotate(20deg); color: var(--color-accent); }
+        .theme-toggle { cursor: pointer; font-size: 20px; color: var(--text-main); background: none; border: none; }
 
         /* --- CONTENT --- */
         .content-wrapper { flex: 1; padding: 20px; }
-        .container { max-width: 1100px; margin: 0 auto; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        .price-tag, .total-price, .stat-number, .points-badge { font-weight: 900 !important; }
 
         /* --- FOOTER --- */
-        footer { 
-            background: var(--bg-surface); 
-            color: var(--text-main); 
-            padding: 60px 0 20px 0; 
-            margin-top: 50px; 
-            border-top: 1px solid var(--border-color);
-            transition: background-color 0.3s;
-        }
-        .footer-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px; max-width: 1100px; margin: 0 auto; padding: 0 20px;
-        }
-        .footer-col h4 { color: var(--color-accent); margin-bottom: 20px; font-size: 1.2rem; font-weight: 800; }
+        footer { background: var(--bg-surface); padding: 60px 0 20px 0; margin-top: 50px; border-top: 1px solid var(--border-color); padding-bottom: 90px; text-align: center; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; max-width: 1100px; margin: 0 auto; padding: 0 20px; text-align: center; }
+        .footer-col h4 { color: var(--color-accent); margin-bottom: 20px; font-size: 1.2rem; font-weight: 900 !important; }
         .footer-col ul { list-style: none; padding: 0; }
         .footer-col ul li { margin-bottom: 12px; }
-        .footer-col ul li a { color: var(--text-muted); font-size: 15px; }
-        .footer-col ul li a:hover { color: var(--color-accent); padding-left: 5px; }
-
+        .footer-col ul li a { color: var(--text-muted); font-size: 15px; font-weight: 600 !important; }
         .footer-social { margin-top: 20px; }
-        .footer-social a {
-            color: var(--text-main); margin-right: 20px; font-size: 32px; transition: 0.3s;
-        }
-        .footer-social a:hover { color: var(--color-accent); transform: translateY(-3px); }
-        .footer-bottom { text-align: center; margin-top: 50px; border-top: 1px solid var(--border-color); padding-top: 20px; color: var(--text-muted); font-size: 14px; }
+        .footer-social a { color: var(--text-main); margin-right: 20px; font-size: 32px; transition: 0.3s; }
+        .footer-bottom { text-align: center; margin-top: 50px; border-top: 1px solid var(--border-color); padding-top: 20px; color: var(--text-muted); font-size: 14px; font-weight: 600 !important; }
 
-        /* --- MOBİL --- */
-        @media (max-width: 900px) {
-            .nav-container { flex-direction: column; gap: 15px; }
-            .nav-right { flex-direction: column; gap: 15px; width: 100%; }
-            .nav-links { flex-wrap: wrap; justify-content: center; }
-            .settings-group { border-left: none; padding-left: 0; }
-            .social-container { justify-content: center; }
-        }
-
+        /* --- WHATSAPP FLOAT --- */
         .whatsapp-float {
-            position: fixed; bottom: 25px; 
-            /* Yöne göre butonun yeri değişsin (RTL/LTR) */
+            position: fixed; bottom: 80px; 
             {% if t.direction == 'rtl' %}left: 25px;{% else %}right: 25px;{% endif %}
             background-color: #25d366; color: #FFF; border-radius: 50%;
-            text-align: center; font-size: 35px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
-            z-index: 100; width: 65px; height: 65px;
-            display: flex; align-items: center; justify-content: center;
-            transition: 0.3s;
+            width: 55px; height: 55px; display: flex; align-items: center; justify-content: center;
+            font-size: 30px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2); z-index: 100;
         }
-        .whatsapp-float:hover { transform: scale(1.1); }
+
+        /* --- MOBİL APP GÖRÜNÜMÜ --- */
+        .mobile-bottom-nav { display: none; } /* Masaüstünde gizli */
+
+        @media (max-width: 900px) {
+            .nav-container { flex-direction: column; gap: 15px; padding: 10px 0; }
+            .nav-right { flex-direction: column; gap: 15px; width: 100%; }
+            .nav-links { display: none; } /* Üst menü mobilde gizli */
+            .settings-group { border: none; padding: 0; }
+            .social-container { justify-content: center; }
+            .logo { font-size: 1.4rem; }
+            .container { padding: 0 15px; }
+            
+            /* Alt Menü (App Bar) */
+            .mobile-bottom-nav {
+                display: flex; justify-content: space-around; align-items: center;
+                position: fixed; bottom: 0; left: 0; width: 100%;
+                background: var(--bg-surface);
+                border-top: 1px solid var(--border-color);
+                box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+                z-index: 9999;
+                padding-bottom: env(safe-area-inset-bottom);
+                height: 65px;
+            }
+            .nav-item {
+                display: flex; flex-direction: column; align-items: center; justify-content: center;
+                text-decoration: none; color: var(--text-muted); font-size: 0.75rem; font-weight: 600;
+                flex: 1; height: 100%;
+            }
+            .nav-item i { font-size: 1.3rem; margin-bottom: 4px; transition: 0.3s; }
+            .nav-item.active { color: var(--color-accent); }
+            .nav-item.active i { transform: translateY(-2px); }
+            
+            /* Ortadaki + Butonu */
+            .center-fab {
+                background: var(--color-accent); color: white;
+                width: 50px; height: 50px; border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+                font-size: 1.5rem; box-shadow: 0 5px 15px rgba(255, 143, 163, 0.5);
+                transform: translateY(-20px); border: 4px solid var(--bg-body);
+            }
+
+            /* Ürün Kartları (2'li Yan Yana) */
+            .product-grid {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 15px !important;
+            }
+            .product-img-wrap { height: 180px !important; }
+            .price-tag { font-size: 0.8rem !important; padding: 4px 8px !important; }
+            .btn-quick-add { width: 90%; font-size: 0.8rem; padding: 8px; bottom: 10px; }
+        }
     </style>
 </head>
-<body>
+<body class="{% if t.direction == 'rtl' %}rtl-mode{% endif %}">
 
     <nav class="navbar">
         <div class="nav-container">
@@ -202,7 +181,7 @@
                         <li>
                             <form action="{% url 'logout' %}" method="post" style="display:inline;">
                                 {% csrf_token %}
-                                <button type="submit" style="background:none; border:none; color: var(--color-accent); font-weight:bold; cursor:pointer; font-size:1rem;">{{ t.logout }}</button>
+                                <button type="submit" style="background:none; border:none; color: var(--color-accent); font-weight:900; cursor:pointer; font-size:1rem; font-family: inherit;">{{ t.logout }}</button>
                             </form>
                         </li>
                     {% else %}
@@ -217,9 +196,9 @@
                         <input name="next" type="hidden" value="{{ redirect_to }}">
                         
                         <button type="submit" name="language" value="en" class="lang-btn {% if CURRENT_LANG == 'en' %}active{% endif %}">EN</button>
-                        <span style="color:var(--text-muted)">|</span>
+                        <span style="color:var(--border-color)">|</span>
                         <button type="submit" name="language" value="ckb" class="lang-btn {% if CURRENT_LANG == 'ckb' %}active{% endif %}">KU</button>
-                        <span style="color:var(--text-muted)">|</span>
+                        <span style="color:var(--border-color)">|</span>
                         <button type="submit" name="language" value="ar" class="lang-btn {% if CURRENT_LANG == 'ar' %}active{% endif %}">AR</button>
                     </form>
 
@@ -253,8 +232,10 @@
     </div>
 
     <div class="content-wrapper">
-        {% block content %}
-        {% endblock %}
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
     </div>
 
     <a href="https://wa.me/9647517363196" target="_blank" class="whatsapp-float">
@@ -265,7 +246,7 @@
         <div class="footer-grid">
             <div class="footer-col">
                 <h4>Dalin Shopping</h4>
-                <p style="color: var(--text-muted);">{{ t.footer_desc }}</p>
+                <p style="color: var(--text-muted); font-weight: 600;">{{ t.footer_desc }}</p>
                 <div class="footer-social">
                     <a href="https://www.instagram.com/dalin.shoping/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
                     <a href="https://www.tiktok.com/@dalin.shopping" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
@@ -295,32 +276,44 @@
         </div>
     </footer>
 
+    <div class="mobile-bottom-nav">
+        <a href="{% url 'home' %}" class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+            <i class="fa-solid fa-house"></i>
+            <span>{{ t.home }}</span>
+        </a>
+        
+        <a href="{% url 'create_order' %}" class="nav-item {% if request.resolver_match.url_name == 'create_order' %}active{% endif %}">
+            <div class="center-fab">
+                <i class="fa-solid fa-plus"></i>
+            </div>
+        </a>
+        
+        <a href="{% url 'my_orders' %}" class="nav-item {% if request.resolver_match.url_name == 'my_orders' %}active{% endif %}">
+            <i class="fa-solid fa-box-open"></i>
+            <span>{{ t.orders }}</span>
+        </a>
+        
+        <a href="{% url 'profile' %}" class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+            <i class="fa-solid fa-user"></i>
+            <span>Profil</span>
+        </a>
+    </div>
+
     <script>
-        // 1. Sayfa yüklenirken hafızayı kontrol et
         const currentTheme = localStorage.getItem('theme');
         const themeBtn = document.getElementById('theme-btn');
         const themeIcon = themeBtn.querySelector('i');
 
         if (currentTheme === 'dark') {
             document.body.classList.add('dark-mode');
-            themeIcon.classList.remove('fa-moon');
-            themeIcon.classList.add('fa-sun'); // Güneş ikonu yap
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
         }
 
-        // 2. Butona basınca çalışacak fonksiyon
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
-            
-            // İkonu değiştir ve Kaydet
-            if (document.body.classList.contains('dark-mode')) {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-                localStorage.setItem('theme', 'dark'); // Hafızaya at
-            } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-                localStorage.setItem('theme', 'light'); // Hafızaya at
-            }
+            const isDark = document.body.classList.contains('dark-mode');
+            themeIcon.classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
         }
     </script>
 
