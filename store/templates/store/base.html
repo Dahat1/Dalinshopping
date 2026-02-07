@@ -76,11 +76,22 @@
         }
         .btn-primary:hover { background: var(--color-main); transform: translateY(-2px); }
 
-        /* --- SOCIAL BAR --- */
+        /* --- SOCIAL BAR & RENKLERİ --- */
         .social-bar { background-color: var(--bg-bar); padding: 12px 0; border-bottom: 1px solid var(--border-color); }
         .social-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: flex-start; gap: 25px; align-items: center; flex-wrap: wrap; }
-        .social-link { font-size: 14px; display: flex; align-items: center; gap: 8px; font-weight: 800 !important; color: var(--text-muted); }
+        
+        /* Renkleri geri getiriyoruz ve ikonları kalın yapıyoruz */
+        .social-link { font-size: 14px; display: flex; align-items: center; gap: 8px; font-weight: 800 !important; transition: 0.3s; }
         .social-link i { font-size: 22px; }
+        
+        /* Özel Renkler */
+        .social-link.whatsapp { color: #25D366; }
+        .social-link.instagram { color: #E1306C; }
+        .social-link.tiktok { color: var(--text-main); } /* TikTok genelde siyah/beyazdır */
+        .social-link.snapchat { color: #FFD700; text-shadow: 0px 0px 1px #999; }
+        .social-link.linktree { color: #43E660; }
+        
+        .social-link:hover { transform: scale(1.1); filter: brightness(1.1); }
 
         /* --- AYARLAR & DİL --- */
         .settings-group { display: flex; align-items: center; gap: 15px; border-left: 1px solid var(--border-color); padding-left: 20px; }
@@ -90,7 +101,15 @@
 
         /* --- CONTENT --- */
         .content-wrapper { flex: 1; padding: 20px; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        /* Mobil için container'ı ortala ve daralt */
+        .container { 
+            max-width: 1100px; 
+            margin: 0 auto; 
+            padding: 0 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; /* Kartları ortalar */
+        }
         .price-tag, .total-price, .stat-number, .points-badge { font-weight: 900 !important; }
 
         /* --- FOOTER --- */
@@ -100,8 +119,15 @@
         .footer-col ul { list-style: none; padding: 0; }
         .footer-col ul li { margin-bottom: 12px; }
         .footer-col ul li a { color: var(--text-muted); font-size: 15px; font-weight: 600 !important; }
-        .footer-social { margin-top: 20px; }
-        .footer-social a { color: var(--text-main); margin-right: 20px; font-size: 32px; transition: 0.3s; }
+        .footer-social { margin-top: 20px; display: flex; justify-content: center; gap: 20px; }
+        .footer-social a { font-size: 32px; transition: 0.3s; }
+        .footer-social a:hover { transform: translateY(-3px); }
+        /* Footer'daki ikonlara da renk verelim */
+        .footer-social .fa-whatsapp { color: #25D366; }
+        .footer-social .fa-instagram { color: #E1306C; }
+        .footer-social .fa-tiktok { color: var(--text-main); }
+        .footer-social .fa-snapchat { color: #FFD700; }
+        .footer-social .fa-link { color: #43E660; }
         .footer-bottom { text-align: center; margin-top: 50px; border-top: 1px solid var(--border-color); padding-top: 20px; color: var(--text-muted); font-size: 14px; font-weight: 600 !important; }
 
         /* --- WHATSAPP FLOAT --- */
@@ -123,7 +149,7 @@
             .settings-group { border: none; padding: 0; }
             .social-container { justify-content: center; }
             .logo { font-size: 1.4rem; }
-            .container { padding: 0 15px; }
+            .container { padding: 0 15px; align-items: stretch; } /* Mobilde kartlar tam genişlikte olsun */
             
             /* Alt Menü (App Bar) */
             .mobile-bottom-nav {
@@ -212,21 +238,21 @@
 
     <div class="social-bar">
         <div class="social-container">
-            <a href="https://wa.me/9647517363196" target="_blank" class="social-link">
-                <i class="fa-brands fa-whatsapp icon-whatsapp"></i>
+            <a href="https://wa.me/9647517363196" target="_blank" class="social-link whatsapp">
+                <i class="fa-brands fa-whatsapp"></i>
                 <span>WhatsApp</span>
             </a>
-            <a href="https://www.instagram.com/dalin.shoping/" target="_blank" class="social-link">
-                <i class="fa-brands fa-instagram icon-instagram"></i>
+            <a href="https://www.instagram.com/dalin.shoping/" target="_blank" class="social-link instagram">
+                <i class="fa-brands fa-instagram"></i>
             </a>
-            <a href="https://www.tiktok.com/@dalin.shopping" target="_blank" class="social-link">
-                <i class="fa-brands fa-tiktok icon-tiktok"></i>
+            <a href="https://www.tiktok.com/@dalin.shopping" target="_blank" class="social-link tiktok">
+                <i class="fa-brands fa-tiktok"></i>
             </a>
-            <a href="https://www.snapchat.com/add/dalinonline" target="_blank" class="social-link">
-                <i class="fa-brands fa-snapchat icon-snapchat"></i>
+            <a href="https://www.snapchat.com/add/dalinonline" target="_blank" class="social-link snapchat">
+                <i class="fa-brands fa-snapchat"></i>
             </a>
-            <a href="https://linktr.ee/dalinshopping" target="_blank" class="social-link">
-                <i class="fa-solid fa-link icon-linktree"></i>
+            <a href="https://linktr.ee/dalinshopping" target="_blank" class="social-link linktree">
+                <i class="fa-solid fa-link"></i>
             </a>
         </div>
     </div>
