@@ -1,149 +1,328 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ CURRENT_LANG }}" dir="{{ t.direction }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dalin Shopping | Easy Shein Orders</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>{{ t.meta_title }}</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Montserrat:wght@400;600;700;800;900&family=Noto+Sans+Arabic:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
     <style>
-        /* GENEL AYARLAR */
-        body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; background-color: #f8f9fa; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
-        
-        /* NAVBAR */
-        .navbar { 
-            background-color: white; 
-            padding: 15px 5%; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
-            position: relative;
-            z-index: 1000;
+        /* --- RENK PALETİ TANIMLARI (CSS VARIABLES) --- */
+        :root {
+            /* === LIGHT MODE (VARSAYILAN) === */
+            --bg-body: #FAFAFA;         /* Kırık Beyaz */
+            --bg-surface: #FFFFFF;      /* Kartlar/Menüler için Tam Beyaz */
+            --bg-bar: #F0F0F0;          /* Sosyal bar için hafif gri */
+            
+            --color-main: #FFC2C7;      /* Canlı Soft Pembe */
+            --color-accent: #FF8FA3;    /* Mercan Pembesi (Butonlar) */
+            --text-main: #1A202C;       /* Lacivert-Siyah */
+            --text-muted: #555555;      /* Gri Yazılar */
+            
+            --border-color: #E2E8F0;    /* İnce çizgiler */
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
-        .logo { font-size: 1.5rem; font-weight: 800; color: #ff0055; text-decoration: none; letter-spacing: -1px; }
-        .nav-links { list-style: none; display: flex; gap: 20px; align-items: center; margin: 0; padding: 0; }
-        .nav-links a { text-decoration: none; color: #333; font-weight: 500; transition: 0.3s; font-size: 0.95rem; }
-        .nav-links a:hover { color: #ff0055; }
-        
-        .btn-primary { background: #ff0055; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; }
-        .btn-primary:hover { background: #d60045; }
 
-        /* CONTENT */
-        .content-wrapper { flex: 1; } /* Footer'ı aşağı itmek için */
-        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+        /* === DARK MODE === */
+        body.dark-mode {
+            --bg-body: #1A202C;         /* Gece Mavisi Grisi */
+            --bg-surface: #2D3748;      /* Kartlar/Menüler (Yüzey) */
+            --bg-bar: #232b38;          /* Sosyal bar için koyu ton */
+            
+            --color-main: #FFD1D6;      /* Uçuk Pembe */
+            --color-accent: #FF9EB5;    /* Parlak Şeker Pembe (Butonlar) */
+            --text-main: #FFFFFF;       /* Beyaz */
+            --text-muted: #A0AEC0;      /* Açık Gri Yazılar */
+            
+            --border-color: #4A5568;    /* Koyu çizgiler */
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- GENEL AYARLAR --- */
+        body { 
+            /* Font artık dile göre otomatik değişiyor (translations.py'den geliyor) */
+            font-family: {{ t.font }}; 
+            margin: 0; padding: 0; 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            display: flex; flex-direction: column; min-height: 100vh; 
+            transition: background-color 0.3s, color 0.3s; /* Yumuşak Geçiş Efekti */
+        }
+        a { text-decoration: none; color: var(--text-main); transition: 0.3s; }
+        a:hover { color: var(--color-accent); }
+
+        /* --- NAVBAR --- */
+        .navbar { 
+            background-color: var(--bg-surface); 
+            padding: 15px 0; 
+            box-shadow: var(--shadow); 
+            position: sticky; top: 0; z-index: 1000;
+            transition: background-color 0.3s;
+            border-bottom: 1px solid var(--border-color);
+        }
         
-        /* FOOTER */
+        .nav-container {
+            max-width: 1100px; margin: 0 auto; padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center; width: 100%;
+        }
+
+        .logo { font-size: 1.6rem; font-weight: 800; color: var(--color-accent); letter-spacing: -1px; }
+
+        .nav-right { display: flex; align-items: center; gap: 25px; }
+        .nav-links { list-style: none; display: flex; gap: 20px; align-items: center; margin: 0; padding: 0; }
+        .nav-links a { color: var(--text-main); font-weight: 500; font-size: 1rem; }
+        .nav-links a:hover { color: var(--color-accent); }
+        
+        /* RTL Düzeltmeleri */
+        body[dir="rtl"] .nav-links { padding-right: 0; }
+        body[dir="rtl"] .settings-group { border-left: none; border-right: 1px solid var(--border-color); padding-left: 0; padding-right: 20px; }
+
+        /* Butonlar */
+        .btn-primary { 
+            background: var(--color-accent); 
+            color: #fff !important; /* Buton yazısı hep beyaz kalsın */
+            padding: 10px 25px; border-radius: 30px; font-weight: 600; 
+            box-shadow: 0 4px 10px rgba(255, 143, 163, 0.4);
+        }
+        .btn-primary:hover { 
+            background: var(--color-main); 
+            transform: translateY(-2px);
+        }
+
+        /* --- SOCIAL BAR --- */
+        .social-bar {
+            background-color: var(--bg-bar);
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s;
+        }
+        .social-container {
+            max-width: 1100px; margin: 0 auto; padding: 0 20px;
+            display: flex; justify-content: flex-start; gap: 25px; align-items: center; flex-wrap: wrap;
+        }
+        .social-link {
+            font-size: 14px; display: flex; align-items: center; gap: 8px; font-weight: 600;
+            color: var(--text-muted);
+            transition: transform 0.3s;
+        }
+        .social-link i { font-size: 22px; }
+        .social-link:hover { transform: scale(1.1); color: var(--color-accent); }
+
+        /* İkon Renkleri */
+        .icon-whatsapp { color: #25D366; }
+        .icon-instagram { color: #E1306C; }
+        .icon-tiktok { color: var(--text-main); } 
+        .icon-snapchat { color: #FFD700; text-shadow: 0px 0px 1px #999; } 
+        .icon-linktree { color: #43E660; }
+
+        /* --- AYARLAR --- */
+        .settings-group { display: flex; align-items: center; gap: 15px; border-left: 1px solid var(--border-color); padding-left: 20px; }
+        
+        /* Dil Seçici Stili */
+        .lang-form { margin: 0; display: flex; align-items: center; gap: 5px; }
+        .lang-btn { 
+            cursor: pointer; padding: 4px 8px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; border: none; background: transparent; color: var(--text-muted); transition: 0.3s;
+        }
+        .lang-btn:hover { color: var(--color-accent); }
+        /* Aktif dilin rengini değiştir */
+        .lang-btn.active { background-color: var(--color-accent); color: white; }
+        
+        .theme-toggle { 
+            cursor: pointer; font-size: 20px; color: var(--text-main); background: none; border: none; transition: 0.3s; 
+        }
+        .theme-toggle:hover { transform: rotate(20deg); color: var(--color-accent); }
+
+        /* --- CONTENT --- */
+        .content-wrapper { flex: 1; padding: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        /* --- FOOTER --- */
         footer { 
-            background: #1a1a1a; color: #ccc; padding: 50px 0 20px 0; 
-            margin-top: 50px; font-size: 0.9rem;
+            background: var(--bg-surface); 
+            color: var(--text-main); 
+            padding: 60px 0 20px 0; 
+            margin-top: 50px; 
+            border-top: 1px solid var(--border-color);
+            transition: background-color 0.3s;
         }
         .footer-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 40px; max-width: 1100px; margin: 0 auto; padding: 0 20px;
         }
-        .footer-col h4 { color: white; margin-bottom: 20px; font-size: 1.1rem; }
+        .footer-col h4 { color: var(--color-accent); margin-bottom: 20px; font-size: 1.2rem; font-weight: 800; }
         .footer-col ul { list-style: none; padding: 0; }
-        .footer-col ul li { margin-bottom: 10px; }
-        .footer-col ul li a { color: #999; text-decoration: none; transition: 0.3s; }
-        .footer-col ul li a:hover { color: #ff0055; padding-left: 5px; }
-        .footer-bottom { text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px; color: #666; }
+        .footer-col ul li { margin-bottom: 12px; }
+        .footer-col ul li a { color: var(--text-muted); font-size: 15px; }
+        .footer-col ul li a:hover { color: var(--color-accent); padding-left: 5px; }
 
-        /* FORM INPUTS */
-        .form-control {
-            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;
-            font-size: 1rem; box-sizing: border-box; font-family: 'Poppins', sans-serif;
+        .footer-social { margin-top: 20px; }
+        .footer-social a {
+            color: var(--text-main); margin-right: 20px; font-size: 32px; transition: 0.3s;
+        }
+        .footer-social a:hover { color: var(--color-accent); transform: translateY(-3px); }
+        .footer-bottom { text-align: center; margin-top: 50px; border-top: 1px solid var(--border-color); padding-top: 20px; color: var(--text-muted); font-size: 14px; }
+
+        /* --- MOBİL --- */
+        @media (max-width: 900px) {
+            .nav-container { flex-direction: column; gap: 15px; }
+            .nav-right { flex-direction: column; gap: 15px; width: 100%; }
+            .nav-links { flex-wrap: wrap; justify-content: center; }
+            .settings-group { border-left: none; padding-left: 0; }
+            .social-container { justify-content: center; }
         }
 
-        /* --- MOBİL UYUMLULUK (NAVBAR DÜZELTMESİ) --- */
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column; /* Alt alta diz */
-                padding: 15px 20px;
-                gap: 15px;
-            }
-            .nav-links {
-                width: 100%;
-                justify-content: center; /* Ortala */
-                flex-wrap: wrap; /* Sığmazsa aşağı geçsin */
-                gap: 15px;
-            }
-            .nav-links li {
-                margin: 5px 0;
-            }
-            .logo { font-size: 1.8rem; }
+        .whatsapp-float {
+            position: fixed; bottom: 25px; 
+            /* Yöne göre butonun yeri değişsin (RTL/LTR) */
+            {% if t.direction == 'rtl' %}left: 25px;{% else %}right: 25px;{% endif %}
+            background-color: #25d366; color: #FFF; border-radius: 50%;
+            text-align: center; font-size: 35px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            z-index: 100; width: 65px; height: 65px;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s;
         }
+        .whatsapp-float:hover { transform: scale(1.1); }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <a href="{% url 'home' %}" class="logo">Dalin Shopping</a>
-        <ul class="nav-links">
-            <li><a href="{% url 'home' %}">Home</a></li>
-            <li><a href="{% url 'faq' %}">FAQ</a></li> 
-            {% if user.is_authenticated %}
-                <li><a href="{% url 'my_orders' %}">📦 Orders</a></li>
-                <li><a href="{% url 'profile' %}" style="font-weight: bold; color: #333;">👤 {{ user.username }}</a></li>
-                <li><a href="{% url 'logout' %}" style="color: red;">Logout</a></li>
-            {% else %}
-                <li><a href="{% url 'login' %}">Login</a></li>
-                <li><a href="{% url 'register' %}" class="btn-primary">Sign Up</a></li>
-            {% endif %}
-        </ul>
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="logo">Dalin Shopping</a>
+            <div class="nav-right">
+                <ul class="nav-links">
+                    <li><a href="{% url 'home' %}">{{ t.home }}</a></li>
+                    <li><a href="{% url 'faq' %}">{{ t.faq }}</a></li> 
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'my_orders' %}">📦 {{ t.orders }}</a></li>
+                        <li><a href="{% url 'profile' %}">👤 {{ user.username }}</a></li>
+                        <li>
+                            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" style="background:none; border:none; color: var(--color-accent); font-weight:bold; cursor:pointer; font-size:1rem;">{{ t.logout }}</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}">{{ t.login }}</a></li>
+                        <li><a href="{% url 'register' %}" class="btn-primary">{{ t.signup }}</a></li>
+                    {% endif %}
+                </ul>
+
+                <div class="settings-group">
+                    <form action="{% url 'set_language' %}" method="post" class="lang-form">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ redirect_to }}">
+                        
+                        <button type="submit" name="language" value="en" class="lang-btn {% if CURRENT_LANG == 'en' %}active{% endif %}">EN</button>
+                        <span style="color:var(--text-muted)">|</span>
+                        <button type="submit" name="language" value="ckb" class="lang-btn {% if CURRENT_LANG == 'ckb' %}active{% endif %}">KU</button>
+                        <span style="color:var(--text-muted)">|</span>
+                        <button type="submit" name="language" value="ar" class="lang-btn {% if CURRENT_LANG == 'ar' %}active{% endif %}">AR</button>
+                    </form>
+
+                    <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
     </nav>
+
+    <div class="social-bar">
+        <div class="social-container">
+            <a href="https://wa.me/9647517363196" target="_blank" class="social-link">
+                <i class="fa-brands fa-whatsapp icon-whatsapp"></i>
+                <span>WhatsApp</span>
+            </a>
+            <a href="https://www.instagram.com/dalin.shoping/" target="_blank" class="social-link">
+                <i class="fa-brands fa-instagram icon-instagram"></i>
+            </a>
+            <a href="https://www.tiktok.com/@dalin.shopping" target="_blank" class="social-link">
+                <i class="fa-brands fa-tiktok icon-tiktok"></i>
+            </a>
+            <a href="https://www.snapchat.com/add/dalinonline" target="_blank" class="social-link">
+                <i class="fa-brands fa-snapchat icon-snapchat"></i>
+            </a>
+            <a href="https://linktr.ee/dalinshopping" target="_blank" class="social-link">
+                <i class="fa-solid fa-link icon-linktree"></i>
+            </a>
+        </div>
+    </div>
 
     <div class="content-wrapper">
         {% block content %}
         {% endblock %}
     </div>
 
-    <a href="https://wa.me/9647507640707" target="_blank" class="whatsapp-float">
+    <a href="https://wa.me/9647517363196" target="_blank" class="whatsapp-float">
         <i class="fa-brands fa-whatsapp"></i>
     </a>
-
-    <style>
-        .whatsapp-float {
-            position: fixed; bottom: 20px; right: 20px;
-            background-color: #25d366; color: #FFF; border-radius: 50%;
-            text-align: center; font-size: 30px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
-            z-index: 100; width: 60px; height: 60px;
-            display: flex; align-items: center; justify-content: center;
-            transition: 0.3s; text-decoration: none;
-        }
-        .whatsapp-float:hover { transform: scale(1.1); box-shadow: 2px 2px 15px rgba(0,0,0,0.3); }
-    </style>
 
     <footer>
         <div class="footer-grid">
             <div class="footer-col">
                 <h4>Dalin Shopping</h4>
-                <p>The easiest way to shop from Shein in Iraq. Best rates, no hidden fees, fast delivery.</p>
+                <p style="color: var(--text-muted);">{{ t.footer_desc }}</p>
+                <div class="footer-social">
+                    <a href="https://www.instagram.com/dalin.shoping/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com/@dalin.shopping" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="https://www.snapchat.com/add/dalinonline" target="_blank"><i class="fa-brands fa-snapchat"></i></a>
+                    <a href="https://linktr.ee/dalinshopping" target="_blank"><i class="fa-solid fa-link"></i></a>
+                    <a href="https://wa.me/9647517363196" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+                </div>
             </div>
             <div class="footer-col">
-                <h4>Quick Links</h4>
+                <h4>{{ t.quick_links }}</h4>
                 <ul>
-                    <li><a href="{% url 'home' %}">Home</a></li>
-                    <li><a href="{% url 'create_order' %}">New Order</a></li>
-                    <li><a href="{% url 'my_orders' %}">Track Order</a></li>
-                    <li><a href="{% url 'profile' %}">My Profile</a></li>
+                    <li><a href="{% url 'home' %}">{{ t.home }}</a></li>
+                    <li><a href="{% url 'create_order' %}">{{ t.new_order }}</a></li>
+                    <li><a href="{% url 'my_orders' %}">{{ t.track_order }}</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h4>Help Center</h4>
+                <h4>{{ t.help_center }}</h4>
                 <ul>
-                    <li><a href="{% url 'faq' %}">FAQ</a></li>
-                    <li><a href="https://wa.me/9647507640707">Contact Support</a></li>
-                    <li><a href="#">Shipping Policy</a></li>
+                    <li><a href="{% url 'faq' %}">{{ t.faq }}</a></li>
+                    <li><a href="https://wa.me/9647517363196">{{ t.contact_support }}</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            &copy; 2026 Dalin Shopping. All rights reserved. Made with ❤️ in Erbil.
+            &copy; 2026 Dalin Shopping. {{ t.all_rights }}
         </div>
     </footer>
+
+    <script>
+        // 1. Sayfa yüklenirken hafızayı kontrol et
+        const currentTheme = localStorage.getItem('theme');
+        const themeBtn = document.getElementById('theme-btn');
+        const themeIcon = themeBtn.querySelector('i');
+
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun'); // Güneş ikonu yap
+        }
+
+        // 2. Butona basınca çalışacak fonksiyon
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            
+            // İkonu değiştir ve Kaydet
+            if (document.body.classList.contains('dark-mode')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark'); // Hafızaya at
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light'); // Hafızaya at
+            }
+        }
+    </script>
 
 </body>
 </html>

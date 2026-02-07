@@ -22,74 +22,107 @@
             </div>
         </div>
 
-        <h2 style="text-align: center; color: #333; margin-bottom: 5px;">Welcome Back!</h2>
-        <p style="text-align: center; color: #888; font-size: 0.9rem; margin-bottom: 25px;">Please login to continue.</p>
+        <h2 style="text-align: center; color: var(--text-main); margin-bottom: 5px;">{{ t.welcome_back }}</h2>
+        <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;">{{ t.login_subtitle }}</p>
 
         {% if form.errors %}
-            <div class="alert-error">❌ Username or password is incorrect.</div>
+            <div class="alert-error">❌ {{ t.login_error }}</div>
         {% endif %}
 
         <form method="POST" id="loginForm">
             {% csrf_token %}
             
             <div class="input-group">
-                <label>Username</label>
-                <input type="text" name="username" id="username" placeholder="Enter your username" required autocomplete="off">
+                <label>{{ t.username_label }}</label>
+                <input type="text" name="username" id="username" placeholder="{{ t.username_placeholder }}" required autocomplete="off">
             </div>
 
             <div class="input-group" style="position: relative;">
-                <label>Password</label>
-                <input type="password" name="password" id="password" placeholder="Enter your password" required>
+                <label>{{ t.password_label }}</label>
+                <input type="password" name="password" id="password" placeholder="{{ t.password_placeholder }}" required>
                 <span class="toggle-password" id="toggleBtn" onclick="togglePassword()">
                     👁️
                 </span>
             </div>
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <label style="font-size: 0.9rem; color: #666; cursor: pointer;">
-                    <input type="checkbox"> Remember me
+                <label style="font-size: 0.9rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                    <input type="checkbox" style="width: auto; margin: 0;"> {{ t.remember_me }}
                 </label>
-                <a href="{% url 'reset_password' %}" style="font-size: 0.9rem; color: #ff0055; text-decoration: none; font-weight: 500;">Forgot Password?</a>
+                <a href="{% url 'reset_password' %}" style="font-size: 0.9rem; color: var(--color-accent); text-decoration: none; font-weight: 500;">{{ t.forgot_password }}</a>
             </div>
 
-            <button type="submit" class="btn-login">Login</button>
+            <button type="submit" class="btn-login">{{ t.login_btn }}</button>
         </form>
 
-        <p style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: #666;">
-            Don't have an account? <a href="{% url 'register' %}" style="color: #ff0055; font-weight: bold; text-decoration: none;">Sign Up</a>
+        <p style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--text-muted);">
+            {{ t.no_account_text }} <a href="{% url 'register' %}" style="color: var(--color-accent); font-weight: bold; text-decoration: none;">{{ t.signup_link_text }}</a>
         </p>
     </div>
 
 </div>
 
 <style>
-    /* TEMEL DÜZEN */
-    .login-wrapper { min-height: 85vh; display: flex; justify-content: center; align-items: center; background: #f0f2f5; }
+    /* TEMEL DÜZEN (CSS Değişkenleri ile) */
+    .login-wrapper { 
+        min-height: 85vh; 
+        display: flex; justify-content: center; align-items: center; 
+        background: var(--bg-body); /* Arka plan temaya göre değişsin */
+    }
+    
     .login-card {
-        background: white; padding: 40px; border-radius: 20px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.05); width: 100%; max-width: 400px;
+        background: var(--bg-surface); /* Kart rengi */
+        padding: 40px; border-radius: 20px;
+        box-shadow: var(--shadow); /* Gölge temaya göre */
+        width: 100%; max-width: 400px;
         position: relative; margin-top: 80px;
+        border: 1px solid var(--border-color);
     }
     
     .input-group { margin-bottom: 20px; }
-    .input-group label { display: block; font-weight: 600; font-size: 0.9rem; color: #444; margin-bottom: 8px; }
+    .input-group label { display: block; font-weight: 600; font-size: 0.9rem; color: var(--text-main); margin-bottom: 8px; }
+    
     .input-group input {
-        width: 100%; padding: 14px 15px; border: 2px solid #e1e1e1; border-radius: 12px;
+        width: 100%; padding: 14px 15px; 
+        border: 2px solid var(--border-color); 
+        background: var(--bg-body); /* Input içi hafif farklı ton */
+        color: var(--text-main);    /* Yazı rengi */
+        border-radius: 12px;
         font-size: 1rem; transition: all 0.3s ease; box-sizing: border-box; font-family: 'Poppins', sans-serif;
     }
-    .input-group input:focus { border-color: #ff0055; background: #fffbfd; outline: none; box-shadow: 0 0 0 4px rgba(255, 0, 85, 0.05); }
     
-    .toggle-password { position: absolute; right: 15px; bottom: 14px; cursor: pointer; font-size: 1.2rem; opacity: 0.5; transition: 0.3s; z-index: 5; }
-    .toggle-password:hover { opacity: 1; transform: scale(1.1); }
+    .input-group input:focus { 
+        border-color: var(--color-accent); 
+        background: var(--bg-surface); 
+        outline: none; 
+        box-shadow: 0 0 0 4px rgba(255, 0, 85, 0.05); 
+    }
+    
+    .toggle-password { position: absolute; right: 15px; bottom: 14px; cursor: pointer; font-size: 1.2rem; opacity: 0.5; transition: 0.3s; z-index: 5; color: var(--text-main); }
+    .toggle-password:hover { opacity: 1; transform: scale(1.1); color: var(--color-accent); }
 
     .btn-login {
-        width: 100%; background: #222; color: white; padding: 16px; border: none; border-radius: 12px;
+        width: 100%; 
+        background: var(--text-main); /* Buton rengi: Dark modda Beyaz, Light modda Siyah */
+        color: var(--bg-surface);     /* Yazısı zıt renk */
+        padding: 16px; border: none; border-radius: 12px;
         font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px;
     }
-    .btn-login:hover { background: #ff0055; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 0, 85, 0.3); }
-    .alert-error { background: #ffe6e6; color: #d63031; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 0.9rem; text-align: center; border: 1px solid #ffcccc; }
+    .btn-login:hover { 
+        background: var(--color-accent); 
+        color: white;
+        transform: translateY(-2px); 
+        box-shadow: 0 5px 15px rgba(255, 0, 85, 0.3); 
+    }
+    
+    .alert-error { 
+        background: rgba(255, 0, 0, 0.1); /* Yarı saydam kırmızı */
+        color: #d63031; 
+        padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 0.9rem; text-align: center; 
+        border: 1px solid #ffcccc; 
+    }
 
-    /* --- ÖRDEK ÇİZİMİ --- */
+    /* --- ÖRDEK ÇİZİMİ (Sabit Renkler) --- */
     .duck-mascot {
         position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
         width: 140px; height: 120px; z-index: 10;
@@ -106,8 +139,11 @@
     
     .duck-hair { position: absolute; top: -8px; left: 50%; transform: translateX(-50%) rotate(-45deg); width: 20px; height: 20px; background: #ffdb00; border-radius: 0 50% 0 50%; }
     .duck-eyes { display: flex; justify-content: space-between; position: absolute; top: 38px; left: 26px; width: 68px; }
+    
+    /* Gözler hep beyaz kalsın, yoksa dark modda ördek kör olur :) */
     .eye { width: 28px; height: 28px; background: white; border-radius: 50%; position: relative; overflow: hidden; border: 2.5px solid #f1c40f; }
     .pupil { width: 12px; height: 12px; background: #333; border-radius: 50%; position: absolute; top: 8px; left: 8px; transition: transform 0.1s; }
+    
     .duck-beak { position: absolute; top: 62px; left: 50%; transform: translateX(-50%); width: 34px; height: 16px; background: #ff9f43; border-radius: 20px; }
     .duck-blush { position: absolute; top: 58px; width: 16px; height: 10px; background: #ffb6c1; border-radius: 50%; opacity: 0.5; }
     .duck-blush.left { left: 8px; } .duck-blush.right { right: 8px; }
@@ -128,7 +164,6 @@
     .hand.right { right: 0px; transform: rotate(30deg); }
 
     /* --- ANİMASYON HALLERİ --- */
-
     /* 1. COVERING (Gizli) */
     .duck-mascot.covering .hand.left { bottom: 20px; left: 20px; transform: rotate(0deg); }
     .duck-mascot.covering .hand.right { bottom: 20px; right: 20px; transform: rotate(0deg); }
@@ -157,9 +192,7 @@
 
     // --- USERNAME ---
     usernameInput.addEventListener('input', (e) => {
-        // Eğer şifre açıksa (Peeking), gözler oynamasın, şokta kalsın.
         if (isPassVisible()) return;
-
         const val = e.target.value.length;
         const moveX = Math.min(val, 25) - 10; 
         const moveY = Math.abs(moveX) / 5;
@@ -169,7 +202,6 @@
     });
 
     usernameInput.addEventListener('focus', () => { 
-        // Şifre açıksa username'e tıklayınca Looking moduna geçmesin, Peeking kalsın
         if (!isPassVisible()) {
             duckMascot.classList.add('looking'); 
         }
@@ -184,7 +216,6 @@
 
     // --- PASSWORD ---
     passwordInput.addEventListener('focus', () => {
-        // Eğer zaten açıksa (Peeking), Covering yapma.
         if (isPassVisible()) {
             duckMascot.classList.add('peeking');
         } else {
@@ -194,8 +225,6 @@
     });
 
     passwordInput.addEventListener('blur', () => {
-        // Odak gidince sadece Covering'i kaldırıyoruz.
-        // Eğer Peeking ise (Şifre Açıksa) o class kalmalı!
         duckMascot.classList.remove('covering');
     });
 
@@ -206,15 +235,11 @@
         toggleBtn.innerText = type === 'text' ? '🙈' : '👁️'; 
 
         if (type === 'text') {
-            // AÇILDI -> Her şeyi bırak, Peeking moduna geç
             duckMascot.classList.remove('covering');
             duckMascot.classList.remove('looking');
             duckMascot.classList.add('peeking');
         } else {
-            // GİZLENDİ -> Peeking bitti.
             duckMascot.classList.remove('peeking');
-            
-            // Eğer hala password inputundaysak Covering yap, yoksa normal dur.
             if (document.activeElement === passwordInput) {
                 duckMascot.classList.add('covering');
             }

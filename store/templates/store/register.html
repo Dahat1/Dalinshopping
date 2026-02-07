@@ -3,8 +3,13 @@
 {% block content %}
 <div class="auth-wrapper">
     <div class="auth-card">
-        <h2 class="auth-title">Create Account</h2>
-        <p class="auth-subtitle">Join us to start shopping from Shein easily.</p>
+        
+        <div class="icon-wrapper">
+            🚀
+        </div>
+
+        <h2 class="auth-title">{{ t.create_account_title }}</h2>
+        <p class="auth-subtitle">{{ t.create_account_subtitle }}</p>
 
         <form method="POST">
             {% csrf_token %}
@@ -12,63 +17,161 @@
             {% for field in form %}
             <div class="input-group">
                 <label>{{ field.label }}</label>
-                {{ field }}
+                <div class="field-wrapper">
+                    {{ field }}
+                </div>
                 {% if field.errors %}
                     <small class="error-text">{{ field.errors.0 }}</small>
                 {% endif %}
             </div>
             {% endfor %}
 
-            <button type="submit" class="btn-auth">🚀 Create Account</button>
+            <button type="submit" class="btn-auth">{{ t.create_account_btn }}</button>
         </form>
 
         <div class="auth-footer">
-            Already have an account? <a href="{% url 'login' %}">Login here</a>
+            {{ t.already_have_account }} <a href="{% url 'login' %}">{{ t.login_here_link }}</a>
         </div>
     </div>
 </div>
 
 <style>
+    /* GENEL YAPI */
     .auth-wrapper {
         min-height: 85vh;
         display: flex;
         justify-content: center;
         align-items: center;
-        background: linear-gradient(135deg, #fff0f5 0%, #ffffff 100%);
+        background: var(--bg-body); /* Dark/Light uyumlu zemin */
+        padding: 40px 20px;
+        /* Font base.html'den otomatik geliyor */
     }
+
     .auth-card {
-        background: white;
+        background: var(--bg-surface); /* Kart rengi */
         padding: 40px;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
         width: 100%;
         max-width: 450px;
-        border-top: 5px solid #ff0055; /* Marka çizgisi */
+        border: 1px solid var(--border-color);
+        position: relative;
+        overflow: hidden;
+        border-top: 5px solid var(--color-accent); /* Marka çizgisi */
     }
-    .auth-title { text-align: center; color: #333; margin-bottom: 10px; font-weight: 800; }
-    .auth-subtitle { text-align: center; color: #777; margin-bottom: 30px; font-size: 0.95rem; }
+
+    /* İKON ANİMASYONU */
+    .icon-wrapper {
+        font-size: 3.5rem; 
+        margin-bottom: 15px;
+        text-align: center;
+        display: block;
+        animation: rocketFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes rocketFloat {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(5deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    .auth-title { 
+        text-align: center; 
+        color: var(--text-main); 
+        margin-bottom: 10px; 
+        font-weight: 800; 
+        font-size: 1.8rem;
+    }
     
+    .auth-subtitle { 
+        text-align: center; 
+        color: var(--text-muted); 
+        margin-bottom: 30px; 
+        font-size: 0.95rem; 
+    }
+    
+    /* INPUT GRUPLARI */
     .input-group { margin-bottom: 20px; }
-    .input-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #444; }
-    .form-control { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; transition: 0.3s; }
-    .form-control:focus { border-color: #ff0055; outline: none; box-shadow: 0 0 0 3px rgba(255, 0, 85, 0.1); }
     
+    .input-group label { 
+        display: block; 
+        margin-bottom: 8px; 
+        font-weight: 600; 
+        font-size: 0.9rem; 
+        color: var(--text-main); 
+    }
+    
+    /* Django input stilleri */
+    .field-wrapper input, .field-wrapper select, .field-wrapper textarea { 
+        width: 100%; 
+        padding: 12px; 
+        border: 1px solid var(--border-color); 
+        border-radius: 12px; 
+        font-size: 1rem; 
+        box-sizing: border-box; 
+        transition: 0.3s;
+        background: var(--bg-body); 
+        color: var(--text-main);
+        font-family: inherit;
+    }
+    
+    .field-wrapper input:focus { 
+        border-color: var(--color-accent); 
+        outline: none; 
+        box-shadow: 0 0 0 4px rgba(255, 143, 163, 0.2); 
+        background: var(--bg-surface);
+    }
+    
+    /* BUTON */
     .btn-auth {
         width: 100%;
         padding: 15px;
-        background: #333;
-        color: white;
+        background: var(--text-main); 
+        color: var(--bg-surface);
         border: none;
-        border-radius: 10px;
+        border-radius: 12px;
         font-size: 1.1rem;
         font-weight: bold;
         cursor: pointer;
         transition: 0.3s;
+        margin-top: 10px;
     }
-    .btn-auth:hover { background: #ff0055; transform: translateY(-2px); }
     
-    .auth-footer { text-align: center; margin-top: 25px; font-size: 0.9rem; color: #666; border-top: 1px solid #eee; padding-top: 20px; }
-    .auth-footer a { color: #ff0055; font-weight: bold; text-decoration: none; }
-    .error-text { color: red; font-size: 0.8rem; display: block; margin-top: 5px; }
+    .btn-auth:hover { 
+        background: var(--color-accent); 
+        color: white;
+        transform: translateY(-2px); 
+        box-shadow: 0 8px 20px rgba(255, 0, 85, 0.3);
+    }
+    
+    /* ALT KISIM */
+    .auth-footer { 
+        text-align: center; 
+        margin-top: 25px; 
+        font-size: 0.9rem; 
+        color: var(--text-muted); 
+        border-top: 1px solid var(--border-color); 
+        padding-top: 20px; 
+    }
+    
+    .auth-footer a { 
+        color: var(--color-accent); 
+        font-weight: bold; 
+        text-decoration: none; 
+        transition: 0.3s;
+    }
+    .auth-footer a:hover { text-decoration: underline; }
+    
+    .error-text { 
+        color: #e74c3c; 
+        font-size: 0.85rem; 
+        display: block; 
+        margin-top: 5px; 
+        font-weight: 500;
+    }
+
+    @media (max-width: 480px) {
+        .auth-card { padding: 30px 20px; }
+    }
 </style>
 {% endblock %}

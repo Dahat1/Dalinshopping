@@ -1,16 +1,139 @@
 {% extends 'store/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container" style="text-align: center; margin-top: 100px;">
-    <div style="background: white; padding: 50px; border-radius: 20px; display: inline-block; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-        <h1 style="font-size: 4rem; margin: 0;">🎉</h1>
-        <h2 style="color: #333; margin-top: 20px;">Order Received!</h2>
-        <p style="color: #666; font-size: 1.1rem;">Thank you! We have received your order details.</p>
-        <p style="color: #666;">Please check "My Orders" to see the total price in IQD.</p>
+<div class="success-wrapper">
+    <div class="success-card">
         
-        <div style="margin-top: 30px;">
-            <a href="{% url 'home' %}" class="btn-primary" style="margin-right: 10px;">Back to Home</a>
-            </div>
+        <div class="emoji-wrapper">
+            🎉
+        </div>
+
+        <h1 class="success-title">{{ t.order_received_title }}</h1>
+        
+        <div class="message-box">
+            <p class="main-text">{{ t.order_received_main_text }}</p>
+            <p class="sub-text">{{ t.order_received_sub_text }}</p>
+        </div>
+        
+        <div class="button-group">
+            <a href="{% url 'home' %}" class="btn-home">{{ t.back_to_home_btn }}</a>
+            <a href="{% url 'my_orders' %}" class="btn-orders">{{ t.go_to_orders_btn_alt }} →</a>
+        </div>
+
     </div>
 </div>
+
+<style>
+    /* GENEL YAPI */
+    .success-wrapper {
+        min-height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: var(--bg-body); /* Dark/Light uyumlu zemin */
+        padding: 20px;
+    }
+
+    .success-card {
+        background: var(--bg-surface); /* Kart rengi */
+        padding: 50px 40px;
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        text-align: center;
+        max-width: 500px;
+        width: 100%;
+        border: 1px solid var(--border-color);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Üstüne ince bir renkli çizgi */
+    .success-card::before {
+        content: '';
+        position: absolute; top: 0; left: 0; width: 100%; height: 6px;
+        background: linear-gradient(90deg, #ff0055, #ffcc00);
+    }
+
+    /* EMOJI ANİMASYONU */
+    .emoji-wrapper {
+        font-size: 5rem;
+        margin-bottom: 20px;
+        display: inline-block;
+        animation: tada 1.5s infinite;
+    }
+
+    @keyframes tada {
+        0% { transform: scale(1); }
+        10%, 20% { transform: scale(0.9) rotate(-3deg); }
+        30%, 50%, 70%, 90% { transform: scale(1.1) rotate(3deg); }
+        40%, 60%, 80% { transform: scale(1.1) rotate(-3deg); }
+        100% { transform: scale(1) rotate(0); }
+    }
+
+    .success-title {
+        color: var(--text-main);
+        margin: 0 0 15px 0;
+        font-size: 2.2rem;
+        font-weight: 800;
+    }
+
+    /* MESAJ KUTUSU */
+    .message-box {
+        margin-bottom: 30px;
+    }
+
+    .main-text {
+        color: var(--text-main);
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+    }
+
+    .sub-text {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+    }
+
+    /* BUTONLAR */
+    .button-group {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-home {
+        padding: 12px 25px;
+        background: var(--bg-bar);
+        color: var(--text-main);
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.3s;
+        border: 1px solid var(--border-color);
+        font-family: inherit;
+    }
+    .btn-home:hover {
+        background: var(--border-color);
+        transform: translateY(-2px);
+    }
+
+    .btn-orders {
+        padding: 12px 25px;
+        background: var(--color-accent); /* Marka rengi */
+        color: white;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.3s;
+        box-shadow: 0 5px 15px rgba(255, 0, 85, 0.3);
+        font-family: inherit;
+    }
+    .btn-orders:hover {
+        background: var(--text-main);
+        color: var(--bg-surface);
+        transform: translateY(-2px);
+    }
+
+</style>
 {% endblock %}

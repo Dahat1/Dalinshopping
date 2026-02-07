@@ -9,70 +9,113 @@
     </div>
 
     <div class="success-card">
-        <h1 class="success-title">Order Received!</h1>
-        <p class="success-desc">Thank you! Your order <strong>#{{ order.id }}</strong> has been created.</p>
+        <h1 class="success-title">{{ t.order_received_title }}</h1>
+        <p class="success-desc">{{ t.thank_you_msg }} <strong>#{{ order.id }}</strong> {{ t.created_msg }}</p>
 
         <div class="receipt-box">
             <div class="receipt-row">
-                <span><i class="fa-solid fa-layer-group"></i> Total Items</span>
-                <span>{{ order.items.count }} Pcs</span>
+                <span><i class="fa-solid fa-layer-group"></i> {{ t.total_items_label }}</span>
+                <span>{{ order.items.count }} {{ t.pcs_label }}</span>
             </div>
             <div class="receipt-row total-row">
-                <span>Total Amount</span>
+                <span>{{ t.total_amount_label }}</span>
                 <span class="total-price">{{ order.total_price_iqd }} IQD</span>
             </div>
         </div>
 
         <p class="info-text">
-            ⚠️ Please send your order details to WhatsApp to start the process.
+            ⚠️ {{ t.whatsapp_instruction }}
         </p>
 
-        <a href="https://wa.me/9647507640707?text=Hello%20Dalin!%20%F0%9F%91%8B%0AI%20placed%20a%20new%20order.%0A%0A%F0%9F%93%8D%20*ORDER%20DETAILS*%0AID:%20%23{{ order.id }}%0A%F0%9F%91%A4%20Name:%20{{ order.user.first_name }}%20{{ order.user.last_name }}%0A%F0%9F%93%9E%20Phone:%20{{ order.user.profile.phone }}%0A%F0%9F%8F%A0%20City:%20{{ order.user.profile.city }}%0A%0A%F0%9F%9B%92%20*ITEMS*%0A{% for item in order.items.all %}%E2%96%AA%EF%B8%8F%20(${{ item.manual_price_usd }})%20Link:%20{{ item.product_link }}%0A{% endfor %}%0A%F0%9F%92%B0%20*TOTAL:%20{{ order.total_price_iqd }}%20IQD*%0A%0APlease%20confirm!%20%E2%9C%85" 
+        <a href="https://wa.me/9647517363196?text=Hello%20Dalin!%20%F0%9F%91%8B%0AI%20placed%20a%20new%20order.%0A%0A%F0%9F%93%8D%20*ORDER%20DETAILS*%0AID:%20%23{{ order.id }}%0A%F0%9F%91%A4%20Name:%20{{ order.user.first_name }}%20{{ order.user.last_name }}%0A%F0%9F%93%9E%20Phone:%20{{ order.user.profile.phone }}%0A%F0%9F%8F%A0%20City:%20{{ order.user.profile.city }}%0A%0A%F0%9F%9B%92%20*ITEMS*%0A{% for item in order.items.all %}%E2%96%AA%EF%B8%8F%20(${{ item.manual_price_usd }})%20Link:%20{{ item.product_link }}%0A{% endfor %}%0A%F0%9F%92%B0%20*TOTAL:%20{{ order.total_price_iqd }}%20IQD*%0A%0APlease%20confirm!%20%E2%9C%85" 
            target="_blank" class="btn-whatsapp-large">
-            <i class="fa-brands fa-whatsapp fa-xl"></i> Send Order on WhatsApp
+            <i class="fa-brands fa-whatsapp fa-xl"></i> {{ t.send_whatsapp_btn }}
         </a>
 
         <a href="{% url 'my_orders' %}" class="link-home">
-            <i class="fa-solid fa-arrow-left"></i> Go to My Orders
+            <i class="fa-solid fa-arrow-left"></i> {{ t.go_to_orders_btn }}
         </a>
     </div>
 
 </div>
 
 <style>
-    /* STİLLER ÖNCEKİYLE AYNI */
+    /* GENEL YAPI */
     .success-container {
-        min-height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
-        background: #f4f7f6; padding: 20px; text-align: center; font-family: 'Segoe UI', sans-serif;
+        min-height: 85vh; 
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+        background: var(--bg-body); /* Arka plan temaya göre */
+        padding: 20px; text-align: center; 
+        /* Font translations.py'den geliyor */
     }
+    
     .success-icon-wrapper {
-        font-size: 5rem; color: #25D366; margin-bottom: -40px; z-index: 2; position: relative;
-        background: white; border-radius: 50%; width: 100px; height: 100px; line-height: 100px;
+        font-size: 5rem; color: #25D366; 
+        margin-bottom: -40px; z-index: 2; position: relative;
+        background: var(--bg-surface); /* İkon arkası kart rengi */
+        border-radius: 50%; width: 100px; height: 100px; line-height: 100px;
         box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        border: 5px solid var(--bg-body); /* Dış halka sayfa rengiyle uyumlu */
     }
+    
     .success-card {
-        background: white; padding: 60px 40px 40px 40px; border-radius: 20px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.1); max-width: 500px; width: 100%;
-        position: relative; overflow: hidden; border-top: 5px solid #25D366;
+        background: var(--bg-surface); /* Kart rengi */
+        padding: 60px 40px 40px 40px; border-radius: 20px;
+        box-shadow: var(--shadow);
+        max-width: 500px; width: 100%;
+        position: relative; overflow: hidden; 
+        border-top: 5px solid #25D366; /* Üst yeşil çizgi sabit kalsın */
     }
-    .success-title { color: #333; margin: 0; font-size: 2rem; font-weight: 800; }
-    .success-desc { color: #666; margin-top: 10px; font-size: 1rem; line-height: 1.5; }
+    
+    .success-title { 
+        color: var(--text-main); 
+        margin: 0; font-size: 2rem; font-weight: 800; 
+    }
+    
+    .success-desc { 
+        color: var(--text-muted); 
+        margin-top: 10px; font-size: 1rem; line-height: 1.5; 
+    }
+    
     .receipt-box {
-        background: #f8f9fa; border: 1px solid #eee; border-radius: 12px;
+        background: var(--bg-bar); /* Hafif tonlu kutu */
+        border: 1px solid var(--border-color); 
+        border-radius: 12px;
         padding: 20px; margin-top: 25px; text-align: left;
     }
-    .receipt-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem; color: #555; }
-    .total-row { border-top: 2px dashed #ddd; padding-top: 15px; margin-top: 15px; margin-bottom: 0; align-items: center; }
-    .total-price { color: #ff0055; font-weight: 900; font-size: 1.4rem; }
-    .info-text { margin: 25px 0 15px 0; font-size: 0.9rem; color: #888; }
+    
+    .receipt-row { 
+        display: flex; justify-content: space-between; margin-bottom: 12px; 
+        font-size: 0.95rem; color: var(--text-muted); 
+    }
+    
+    .total-row { 
+        border-top: 2px dashed var(--border-color); 
+        padding-top: 15px; margin-top: 15px; margin-bottom: 0; align-items: center; 
+        color: var(--text-main); font-weight: 700;
+    }
+    
+    .total-price { color: var(--color-accent); font-weight: 900; font-size: 1.4rem; }
+    
+    .info-text { margin: 25px 0 15px 0; font-size: 0.9rem; color: var(--text-muted); }
+    
     .btn-whatsapp-large {
         display: flex; justify-content: center; align-items: center; gap: 12px;
         background: #25D366; color: white; padding: 18px; border-radius: 12px;
         text-decoration: none; font-weight: 800; font-size: 1.2rem;
         transition: 0.3s; box-shadow: 0 8px 20px rgba(37, 211, 102, 0.25);
     }
-    .btn-whatsapp-large:hover { background: #128C7E; transform: translateY(-3px); box-shadow: 0 12px 25px rgba(37, 211, 102, 0.4); }
-    .link-home { display: block; margin-top: 25px; color: #999; text-decoration: none; font-size: 0.95rem; transition: 0.3s; font-weight: 600; }
-    .link-home:hover { color: #333; }
+    .btn-whatsapp-large:hover { 
+        background: #128C7E; 
+        transform: translateY(-3px); 
+        box-shadow: 0 12px 25px rgba(37, 211, 102, 0.4); 
+    }
+    
+    .link-home { 
+        display: block; margin-top: 25px; 
+        color: var(--text-muted); text-decoration: none; 
+        font-size: 0.95rem; transition: 0.3s; font-weight: 600; 
+    }
+    .link-home:hover { color: var(--color-accent); }
 </style>
 {% endblock %}

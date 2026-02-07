@@ -5,23 +5,23 @@
 <div class="container" style="max-width: 600px; margin-top: 40px; margin-bottom: 60px;">
     
     <div style="text-align: center; margin-bottom: 30px;">
-        <h2 style="color: #333; margin-bottom: 5px;">🧾 Order Summary</h2>
-        <p style="color: #666;">Please review details before confirming.</p>
+        <h2 style="color: var(--text-main); margin-bottom: 5px;">🧾 {{ t.order_summary_title }}</h2>
+        <p style="color: var(--text-muted);">{{ t.order_summary_subtitle }}</p>
     </div>
 
-    <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.08);">
+    <div class="preview-card">
         
-        <div style="background: #fcfcfc; padding: 25px; border-bottom: 1px solid #eee;">
-            <h4 style="margin: 0 0 15px 0; color: #333;">📦 Items in Order</h4>
+        <div class="items-section">
+            <h4 style="margin: 0 0 15px 0; color: var(--text-main);">📦 {{ t.items_in_order }}</h4>
             
             {% for item in order.items.all %}
-            <div style="background: white; border: 1px solid #eee; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+            <div class="item-box">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                    <span style="font-weight: bold; background: #eee; padding: 2px 8px; border-radius: 6px; font-size: 0.8rem;">Item #{{ forloop.counter }}</span>
-                    <span style="font-weight: bold; color: #ff0055;">${{ item.manual_price_usd }}</span>
+                    <span class="item-badge">{{ t.item_label }} #{{ forloop.counter }}</span>
+                    <span style="font-weight: bold; color: var(--color-accent);">${{ item.manual_price_usd }}</span>
                 </div>
                 
-                <a href="{{ item.product_link }}" target="_blank" style="color: #555; font-size: 0.9rem; text-decoration: none; word-break: break-all; display: block; line-height: 1.4;">
+                <a href="{{ item.product_link }}" target="_blank" class="item-link">
                     🔗 {{ item.product_link|truncatechars:60 }}
                 </a>
             </div>
@@ -29,11 +29,11 @@
 
             {% if screenshots %}
             <div style="margin-top: 20px;">
-                <span style="font-size: 0.9rem; font-weight: 600; color: #666; display: block; margin-bottom: 10px;">Attached Screenshots:</span>
+                <span style="font-size: 0.9rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 10px;">{{ t.attached_screenshots }}:</span>
                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                     {% for ss in screenshots %}
                         <a href="{{ ss.image.url }}" target="_blank">
-                            <img src="{{ ss.image.url }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
+                            <img src="{{ ss.image.url }}" class="screenshot-thumb">
                         </a>
                     {% endfor %}
                 </div>
@@ -41,41 +41,43 @@
             {% endif %}
         </div>
 
-        <div style="padding: 30px;">
-            <div class="row-item" style="opacity: 0.6;">
-                <span>Total Shein Price ($)</span>
-                <span>${{ order.items.all|length }} items</span> </div>
+        <div class="calc-section">
             
-            <div class="row-item" style="opacity: 0.6;">
-                <span>Market Rate (1$ = {{ market_rate|floatformat:0 }})</span>
-                <span style="text-decoration: line-through;">{{ market_price_iqd|floatformat:0 }} IQD</span>
+            <div class="row-item" style="opacity: 0.7;">
+                <span>{{ t.total_shein_price }}</span>
+                <span>${{ order.items.all|length }} {{ t.items_suffix }}</span> 
             </div>
             
-            <div class="row-item" style="color: #28a745; font-weight: bold; font-size: 1.1rem;">
-                <span>✨ Our Rate (1$ = {{ our_rate|floatformat:0 }})</span>
+            <div class="row-item" style="opacity: 0.7;">
+                <span>{{ t.market_rate_label }} (1$ = {{ market_rate|floatformat:0 }})</span>
+                <span style="text-decoration: line-through; color: var(--text-muted);">{{ market_price_iqd|floatformat:0 }} IQD</span>
+            </div>
+            
+            <div class="row-item highlight-row">
+                <span>✨ {{ t.our_rate_label }} (1$ = {{ our_rate|floatformat:0 }})</span>
                 <span>{{ our_price_iqd|floatformat:0 }} IQD</span>
             </div>
             
             <div class="row-item" style="margin-top: 15px;">
-                <span>Local Delivery</span>
+                <span>{{ t.local_delivery }}</span>
                 <span>{{ shipping_fee|floatformat:0 }} IQD</span>
             </div>
             
             <div class="row-item">
-                <span style="color: #555;">Extra Weight Fee (<10kg)</span>
+                <span style="color: var(--text-muted);">{{ t.extra_weight_fee }}</span>
                 <span>
-                    <span style="text-decoration: line-through; color: #999; margin-right: 8px;">10.000 IQD</span>
-                    <span style="background: #ff0055; color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.8rem; font-weight: bold;">FREE</span>
+                    <span style="text-decoration: line-through; color: var(--text-muted); margin-right: 8px; opacity: 0.5;">10.000 IQD</span>
+                    <span class="free-badge">{{ t.free_label }}</span>
                 </span>
             </div>
 
-            <hr style="border: 0; border-top: 1px dashed #ddd; margin: 20px 0;">
+            <hr class="divider-dashed">
 
-            <div style="background: #fff0f5; padding: 15px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ffeef2;">
+            <div class="points-box">
                 <div>
-                    <span style="font-weight: bold; color: #333;">💎 Use Points?</span>
+                    <span style="font-weight: bold; color: var(--text-main);">💎 {{ t.use_points_q }}</span>
                     <br>
-                    <small style="color: #666;">Balance: {{ profile.dalin_points }} Pts</small>
+                    <small style="color: var(--text-muted);">{{ t.balance_label }}: {{ profile.dalin_points }} {{ t.pts_label }}</small>
                 </div>
                 {% if profile.dalin_points > 0 %}
                 <form method="POST" id="pointsForm" style="margin: 0;">
@@ -87,33 +89,33 @@
                     </label>
                 </form>
                 {% else %}
-                <small style="color: #999;">No points</small>
+                <small style="color: var(--text-muted);">{{ t.no_points }}</small>
                 {% endif %}
             </div>
 
             {% if discount > 0 %}
-            <div class="row-item" style="color: #ff0055; font-weight: bold;">
-                <span>Discount Applied</span>
+            <div class="row-item" style="color: var(--color-accent); font-weight: bold;">
+                <span>{{ t.discount_applied }}</span>
                 <span>-{{ discount|floatformat:0 }} IQD</span>
             </div>
             {% endif %}
 
-            <hr style="border: 0; border-top: 2px solid #333; margin: 20px 0;">
+            <hr class="divider-solid">
 
             <div class="row-item total-row">
-                <span>TOTAL TO PAY</span>
-                <span style="font-size: 1.8rem; color: #ff0055;">{{ final_price|floatformat:0 }} IQD</span>
+                <span>{{ t.total_to_pay }}</span>
+                <span class="total-price">{{ final_price|floatformat:0 }} IQD</span>
             </div>
         </div>
 
         <div style="padding: 0 30px 30px 30px;">
             <form action="{% url 'confirm_order' order.id %}" method="POST">
                 {% csrf_token %}
-                <button type="submit" class="btn-confirm">✅ Confirm Order</button>
+                <button type="submit" class="btn-confirm">✅ {{ t.confirm_order_btn }}</button>
             </form>
             
-            <a href="{% url 'edit_order' order.id %}" style="display: block; text-align: center; margin-top: 15px; color: #999; text-decoration: none; font-weight: 500; transition: 0.3s;">
-                ← Go Back & Edit Details
+            <a href="{% url 'edit_order' order.id %}" class="btn-back">
+                ← {{ t.back_edit_btn }}
             </a>
         </div>
 
@@ -121,17 +123,95 @@
 </div>
 
 <style>
-    .row-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 1.05rem; color: #333; }
+    /* KART VE YAPI */
+    .preview-card {
+        background: var(--bg-surface);
+        border-radius: 20px; 
+        overflow: hidden; 
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border-color);
+    }
+
+    .items-section {
+        background: var(--bg-bar); /* Hafif tonlu başlık */
+        padding: 25px; 
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .item-box {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        padding: 15px; border-radius: 12px; margin-bottom: 15px;
+    }
+
+    .item-badge {
+        font-weight: bold; 
+        background: var(--bg-body); 
+        color: var(--text-main);
+        padding: 2px 8px; border-radius: 6px; font-size: 0.8rem;
+    }
+
+    .item-link {
+        color: var(--text-muted); font-size: 0.9rem; text-decoration: none; word-break: break-all; display: block; line-height: 1.4;
+    }
+    .item-link:hover { color: var(--color-accent); }
+
+    .screenshot-thumb {
+        width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color);
+    }
+
+    /* HESAPLAMA ALANI */
+    .calc-section { padding: 30px; }
+
+    .row-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 1.05rem; color: var(--text-main); }
+    
+    .highlight-row { color: #28a745; font-weight: bold; font-size: 1.1rem; }
+    
+    .free-badge {
+        background: var(--color-accent); color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.8rem; font-weight: bold;
+    }
+
+    .divider-dashed { border: 0; border-top: 1px dashed var(--border-color); margin: 20px 0; }
+    .divider-solid { border: 0; border-top: 2px solid var(--text-main); margin: 20px 0; opacity: 0.2; }
+
+    /* PUAN KUTUSU */
+    .points-box {
+        background: rgba(255, 0, 85, 0.05); /* Çok hafif pembe zemin */
+        padding: 15px; border-radius: 12px; margin-bottom: 20px; 
+        display: flex; justify-content: space-between; align-items: center; 
+        border: 1px solid var(--border-color);
+    }
+
+    /* TOPLAM */
     .total-row { align-items: center; font-weight: 800; margin-top: 10px; }
+    .total-price { font-size: 1.8rem; color: var(--color-accent); }
+
+    /* BUTONLAR */
+    .btn-confirm { 
+        width: 100%; 
+        background: var(--text-main); /* Dark: Beyaz, Light: Siyah */
+        color: var(--bg-surface);     /* Zıt renk */
+        padding: 18px; border: none; border-radius: 12px; 
+        font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s; 
+    }
+    .btn-confirm:hover { 
+        background: var(--color-accent); 
+        color: white;
+        transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 0, 85, 0.3); 
+    }
+
+    .btn-back {
+        display: block; text-align: center; margin-top: 15px; 
+        color: var(--text-muted); text-decoration: none; font-weight: 500; transition: 0.3s;
+    }
+    .btn-back:hover { color: var(--color-accent); }
     
-    .btn-confirm { width: 100%; background: #000; color: white; padding: 18px; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
-    .btn-confirm:hover { background: #ff0055; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 0, 85, 0.3); }
-    
+    /* SWITCH (ANAHTAR) */
     .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; }
     .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .4s; }
-    input:checked + .slider { background-color: #ff0055; }
+    input:checked + .slider { background-color: var(--color-accent); }
     input:checked + .slider:before { transform: translateX(24px); }
     .slider.round { border-radius: 34px; }
     .slider.round:before { border-radius: 50%; }

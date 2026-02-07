@@ -6,13 +6,13 @@
     <div class="order-form-card">
         
         <h2 class="form-title">
-            {% if editing %} ✏️ Edit Order {% else %} 🚀 Create New Order {% endif %}
+            {% if editing %} ✏️ {{ t.edit_order_title }} {% else %} 🚀 {{ t.create_order_title }} {% endif %}
         </h2>
-        <p class="form-subtitle">Paste your Shein links below. We calculate the total instantly.</p>
+        <p class="form-subtitle">{{ t.order_subtitle }}</p>
 
         {% if messages %}
             {% for message in messages %}
-                <div class="alert {{ message.tags }}">
+                <div class="alert-box {{ message.tags }}">
                     {% if message.tags == 'error' %}❌{% else %}✅{% endif %} {{ message }}
                 </div>
             {% endfor %}
@@ -27,20 +27,20 @@
                     {% for item in order.items.all %}
                     <div class="item-row">
                         <div class="row-header">
-                            <span class="item-number">Item #{{ forloop.counter }}</span>
+                            <span class="item-number">{{ t.item_label }} #{{ forloop.counter }}</span>
                             {% if not forloop.first %}
                             <button type="button" class="btn-remove" onclick="this.parentElement.parentElement.remove()">
-                                <i class="fa-solid fa-trash"></i> Remove
+                                <i class="fa-solid fa-trash"></i> {{ t.remove_btn }}
                             </button>
                             {% endif %}
                         </div>
                         <div class="input-group">
-                            <label>Shein Product Link</label>
-                            <input type="text" name="links[]" value="{{ item.product_link }}" placeholder="Paste link here..." required class="form-input">
+                            <label>{{ t.shein_link_label }}</label>
+                            <input type="text" name="links[]" value="{{ item.product_link }}" placeholder="{{ t.link_placeholder }}" required class="form-input">
                         </div>
                         <div class="input-group">
-                            <label>Price ($ USD)</label>
-                            <input type="number" name="prices[]" value="{{ item.manual_price_usd }}" step="0.01" placeholder="e.g. 12.50" required class="form-input">
+                            <label>{{ t.price_label }}</label>
+                            <input type="number" name="prices[]" value="{{ item.manual_price_usd }}" step="0.01" placeholder="{{ t.price_placeholder }}" required class="form-input">
                         </div>
                     </div>
                     {% endfor %}
@@ -48,16 +48,16 @@
                 {% else %}
                     <div class="item-row">
                         <div class="row-header">
-                            <span class="item-number">Item #1</span>
+                            <span class="item-number">{{ t.item_label }} #1</span>
                         </div>
                         <div class="input-group">
-                            <label>Shein Product Link</label>
-                            <input type="text" name="links[]" placeholder="Paste link here..." required class="form-input">
+                            <label>{{ t.shein_link_label }}</label>
+                            <input type="text" name="links[]" placeholder="{{ t.link_placeholder }}" required class="form-input">
                         </div>
                         <div class="input-group">
-                            <label>Price ($ USD)</label>
-                            <input type="number" name="prices[]" step="0.01" placeholder="e.g. 12.50" required class="form-input">
-                            <small style="color: #888;">Enter the price you see on Shein app.</small>
+                            <label>{{ t.price_label }}</label>
+                            <input type="number" name="prices[]" step="0.01" placeholder="{{ t.price_placeholder }}" required class="form-input">
+                            <small style="color: var(--text-muted);">{{ t.price_help_text }}</small>
                         </div>
                     </div>
                 {% endif %}
@@ -65,31 +65,30 @@
             </div>
 
             <button type="button" class="btn-add-item" onclick="addNewItem()">
-                <i class="fa-solid fa-plus"></i> Add Another Item
+                <i class="fa-solid fa-plus"></i> {{ t.add_another_item }}
             </button>
 
-            <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
+            <hr class="divider">
 
             <div class="input-group">
-                <label>Cart Screenshots (Optional)</label>
+                <label>{{ t.screenshots_label }}</label>
                 
                 <div class="file-upload-wrapper">
                     <input type="file" name="screenshots" multiple accept="image/*" id="fileInput">
-                    
                     <label for="fileInput" class="file-label" id="uploadLabel">
-                        <i class="fa-solid fa-camera"></i> Click to Upload Photos
+                        <i class="fa-solid fa-camera"></i> {{ t.upload_btn_text }}
                     </label>
                 </div>
                 
-                <div id="fileNameDisplay" style="margin-top: 10px; font-size: 0.85rem; color: #ff0055; font-weight: 600;"></div>
+                <div id="fileNameDisplay"></div>
 
                 {% if editing and order.screenshots.all %}
                 <div style="margin-top: 15px;">
-                    <p style="font-size: 0.85rem; font-weight: bold; color: #555;">Current Screenshots:</p>
+                    <p style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted);">{{ t.current_screenshots }}:</p>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                         {% for ss in order.screenshots.all %}
                             <a href="{{ ss.image.url }}" target="_blank">
-                                <img src="{{ ss.image.url }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
+                                <img src="{{ ss.image.url }}" class="screenshot-thumb">
                             </a>
                         {% endfor %}
                     </div>
@@ -100,8 +99,8 @@
             <div class="points-section">
                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                     <div class="points-text">
-                        <strong>💎 My Points: {{ profile.dalin_points }}</strong>
-                        <p style="font-size: 0.8rem; color: #666;">1 Point = {{ point_value }} IQD Discount</p>
+                        <strong>💎 {{ t.my_points }}: {{ profile.dalin_points }}</strong>
+                        <p>1 {{ t.point_unit }} = {{ point_value }} IQD {{ t.discount }}</p>
                     </div>
                     {% if profile.dalin_points > 0 %}
                     <label class="switch">
@@ -109,40 +108,40 @@
                         <span class="slider round"></span>
                     </label>
                     {% else %}
-                    <span style="font-size: 0.8rem; color: #999;">No points</span>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">{{ t.no_points }}</span>
                     {% endif %}
                 </div>
             </div>
 
             {% if missing_profile %}
             <div class="delivery-section">
-                <h4 style="color: #e67e22; margin-bottom: 15px;"><i class="fa-solid fa-map-pin"></i> Delivery Details</h4>
+                <h4 style="color: #e67e22; margin-bottom: 15px; margin-top: 0;"><i class="fa-solid fa-map-pin"></i> {{ t.delivery_details }}</h4>
                 <div class="input-group">
-                    <label>Phone Number</label>
+                    <label>{{ t.phone_number }}</label>
                     <input type="text" name="phone" placeholder="0750 XXX XX XX" required class="form-input">
                 </div>
                 <div class="input-group">
-                    <label>City</label>
+                    <label>{{ t.city }}</label>
                     <select name="city" class="form-input" required>
-                        <option value="">Select City...</option>
-                        <option value="Erbil">Erbil</option>
-                        <option value="Suleymaniyah">Suleymaniyah</option>
-                        <option value="Duhok">Duhok</option>
-                        <option value="Kirkuk">Kirkuk</option>
-                        <option value="Baghdad">Baghdad</option>
-                        <option value="Mosul">Mosul</option>
-                        <option value="Other">Other</option>
+                        <option value="">{{ t.select_city }}</option>
+                        <option value="Erbil">{{ t.erbil }}</option>
+                        <option value="Suleymaniyah">{{ t.suleymaniyah }}</option>
+                        <option value="Duhok">{{ t.duhok }}</option>
+                        <option value="Kirkuk">{{ t.kirkuk }}</option>
+                        <option value="Baghdad">{{ t.baghdad }}</option>
+                        <option value="Mosul">{{ t.mosul }}</option>
+                        <option value="Other">{{ t.other }}</option>
                     </select>
                 </div>
                 <div class="input-group">
-                    <label>Full Address</label>
-                    <textarea name="address" rows="2" placeholder="Neighborhood, Street, House No..." required class="form-input"></textarea>
+                    <label>{{ t.full_address }}</label>
+                    <textarea name="address" rows="2" placeholder="{{ t.address_placeholder }}" required class="form-input"></textarea>
                 </div>
             </div>
             {% endif %}
 
             <button type="submit" class="btn-submit">
-                {% if editing %} 💾 Update Order {% else %} 🧮 Calculate & Preview {% endif %}
+                {% if editing %} 💾 {{ t.update_order_btn }} {% else %} 🧮 {{ t.calculate_preview_btn }} {% endif %}
             </button>
 
         </form>
@@ -150,33 +149,34 @@
 </div>
 
 <script>
-    // 1. YENİ ÜRÜN EKLEME
+    // 1. YENİ ÜRÜN EKLEME (JS içinde dil değişkenlerini kullanıyoruz)
     function addNewItem() {
         const container = document.getElementById('items-container');
         const itemCount = container.querySelectorAll('.item-row').length + 1;
 
         const newRow = document.createElement('div');
         newRow.classList.add('item-row');
+        // JS içindeki HTML'de de çevirileri kullanıyoruz
         newRow.innerHTML = `
             <div class="row-header">
-                <span class="item-number">Item #${itemCount}</span>
+                <span class="item-number">{{ t.item_label }} #${itemCount}</span>
                 <button type="button" class="btn-remove" onclick="this.parentElement.parentElement.remove()">
-                    <i class="fa-solid fa-trash"></i> Remove
+                    <i class="fa-solid fa-trash"></i> {{ t.remove_btn }}
                 </button>
             </div>
             <div class="input-group">
-                <label>Shein Product Link</label>
-                <input type="text" name="links[]" placeholder="Paste link here..." required class="form-input">
+                <label>{{ t.shein_link_label }}</label>
+                <input type="text" name="links[]" placeholder="{{ t.link_placeholder }}" required class="form-input">
             </div>
             <div class="input-group">
-                <label>Price ($ USD)</label>
-                <input type="number" name="prices[]" step="0.01" placeholder="e.g. 12.50" required class="form-input">
+                <label>{{ t.price_label }}</label>
+                <input type="number" name="prices[]" step="0.01" placeholder="{{ t.price_placeholder }}" required class="form-input">
             </div>
         `;
         container.appendChild(newRow);
     }
 
-    // 2. DOSYA SEÇİMİ GÖSTERGESİ (BU KISIM DÜZELTİLDİ)
+    // 2. DOSYA SEÇİMİ GÖSTERGESİ
     const fileInput = document.getElementById('fileInput');
     const uploadLabel = document.getElementById('uploadLabel');
     const fileNameDisplay = document.getElementById('fileNameDisplay');
@@ -184,24 +184,22 @@
     fileInput.addEventListener('change', function(e) {
         const count = e.target.files.length;
         if (count > 0) {
-            // Label'ın rengini ve yazısını değiştir
-            uploadLabel.style.backgroundColor = '#e8f5e9';
+            uploadLabel.style.backgroundColor = 'rgba(46, 204, 113, 0.1)';
             uploadLabel.style.borderColor = '#2ecc71';
             uploadLabel.style.color = '#27ae60';
-            uploadLabel.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${count} Photo(s) Selected!`;
+            // JS içinde dinamik metin (Tekil/Çoğul ayrımı basitçe yapıldı)
+            uploadLabel.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${count} {{ t.photos_selected }}`;
             
-            // Dosya isimlerini altına yaz (Opsiyonel ama hoş)
             let names = [];
             for(let i=0; i<count; i++) {
                 names.push(e.target.files[i].name);
             }
             fileNameDisplay.textContent = names.join(', ');
         } else {
-            // İptal ederse eski haline döndür
-            uploadLabel.style.backgroundColor = '#f1f1f1';
+            uploadLabel.style.backgroundColor = 'var(--bg-body)';
             uploadLabel.style.borderColor = 'transparent';
-            uploadLabel.style.color = '#555';
-            uploadLabel.innerHTML = `<i class="fa-solid fa-camera"></i> Click to Upload Photos`;
+            uploadLabel.style.color = 'var(--text-muted)';
+            uploadLabel.innerHTML = `<i class="fa-solid fa-camera"></i> {{ t.upload_btn_text }}`;
             fileNameDisplay.textContent = '';
         }
     });
@@ -209,42 +207,145 @@
 
 <style>
     /* GENEL */
-    .order-page-wrapper { min-height: 90vh; display: flex; justify-content: center; padding: 40px 20px; background: #f8f9fa; }
-    .order-form-card { background: white; width: 100%; max-width: 600px; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-    .form-title { text-align: center; color: #333; margin-bottom: 10px; font-weight: 800; font-size: 1.8rem; }
-    .form-subtitle { text-align: center; color: #777; margin-bottom: 30px; font-size: 0.95rem; }
+    .order-page-wrapper { 
+        min-height: 90vh; display: flex; justify-content: center; padding: 40px 20px; 
+        background: var(--bg-body); 
+        /* Font otomatik translations.py'den geliyor */
+    }
+    
+    .order-form-card { 
+        background: var(--bg-surface); 
+        width: 100%; max-width: 600px; padding: 40px; 
+        border-radius: 20px; 
+        box-shadow: var(--shadow); 
+        border: 1px solid var(--border-color);
+    }
+    
+    .form-title { text-align: center; color: var(--text-main); margin-bottom: 10px; font-weight: 800; font-size: 1.8rem; }
+    .form-subtitle { text-align: center; color: var(--text-muted); margin-bottom: 30px; font-size: 0.95rem; }
 
-    /* KUTULAR */
-    .item-row { background: #fff; border: 1px solid #e0e0e0; padding: 20px; border-radius: 12px; margin-bottom: 20px; position: relative; transition: 0.3s; }
-    .item-row:hover { border-color: #ff0055; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+    /* ALERT KUTUSU */
+    .alert-box {
+        padding: 15px; border-radius: 10px; margin-bottom: 20px; 
+        font-weight: 500; font-size: 0.95rem; display: flex; align-items: center; gap: 10px;
+    }
+    .alert-box.success { background: rgba(40, 167, 69, 0.1); color: #28a745; border: 1px solid rgba(40, 167, 69, 0.2); }
+    .alert-box.error { background: rgba(220, 53, 69, 0.1); color: #dc3545; border: 1px solid rgba(220, 53, 69, 0.2); }
+
+    /* KUTULAR (ITEMS) */
+    .item-row { 
+        background: var(--bg-surface); 
+        border: 1px solid var(--border-color); 
+        padding: 20px; border-radius: 12px; margin-bottom: 20px; 
+        position: relative; transition: 0.3s; 
+    }
+    .item-row:hover { 
+        border-color: var(--color-accent); 
+        box-shadow: 0 5px 15px rgba(0,0,0,0.03); 
+    }
+    
     .row-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-    .item-number { font-weight: bold; color: #333; background: #eee; padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; }
-    .btn-remove { background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+    
+    .item-number { 
+        font-weight: bold; color: var(--text-main); 
+        background: var(--bg-bar); 
+        padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; 
+    }
+    
+    .btn-remove { 
+        background: none; border: none; color: #e74c3c; 
+        cursor: pointer; font-size: 0.85rem; font-weight: 600; 
+        display: flex; align-items: center; gap: 5px; 
+    }
     
     .input-group { margin-bottom: 15px; }
-    .input-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; font-size: 0.9rem; }
-    .form-input { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; transition: 0.3s; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-    .form-input:focus { border-color: #ff0055; outline: none; background: #fffbfd; }
+    
+    .input-group label { 
+        display: block; margin-bottom: 8px; font-weight: 600; 
+        color: var(--text-muted); font-size: 0.9rem; 
+    }
+    
+    .form-input { 
+        width: 100%; padding: 12px; 
+        border: 2px solid var(--border-color); 
+        border-radius: 10px; font-size: 1rem; transition: 0.3s; 
+        box-sizing: border-box; font-family: inherit;
+        background: var(--bg-body); color: var(--text-main);
+    }
+    .form-input:focus { 
+        border-color: var(--color-accent); 
+        outline: none; background: var(--bg-surface); 
+    }
 
     /* BUTONLAR */
-    .btn-add-item { width: 100%; padding: 15px; background: white; border: 2px dashed #ccc; color: #666; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; }
-    .btn-add-item:hover { border-color: #ff0055; color: #ff0055; background: #fff0f5; }
-    .btn-submit { width: 100%; padding: 18px; background: #111; color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 20px; }
-    .btn-submit:hover { background: #ff0055; transform: translateY(-3px); }
+    .btn-add-item { 
+        width: 100%; padding: 15px; 
+        background: var(--bg-surface); 
+        border: 2px dashed var(--border-color); 
+        color: var(--text-muted); 
+        border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; 
+        display: flex; justify-content: center; align-items: center; gap: 10px; 
+    }
+    .btn-add-item:hover { 
+        border-color: var(--color-accent); 
+        color: var(--color-accent); 
+        background: rgba(255, 0, 85, 0.05); 
+    }
+    
+    .btn-submit { 
+        width: 100%; padding: 18px; 
+        background: var(--text-main); color: var(--bg-surface); 
+        border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 20px; 
+    }
+    .btn-submit:hover { 
+        background: var(--color-accent); 
+        color: white;
+        transform: translateY(-3px); 
+    }
+
+    .divider { margin: 30px 0; border: 0; border-top: 1px solid var(--border-color); }
 
     /* DOSYA YÜKLEME */
     .file-upload-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; }
     .file-upload-wrapper input[type=file] { position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
-    .file-label { display: block; padding: 15px; background: #f1f1f1; text-align: center; border-radius: 10px; font-weight: 600; color: #555; cursor: pointer; border: 2px solid transparent; transition: 0.3s; }
     
+    .file-label { 
+        display: block; padding: 15px; 
+        background: var(--bg-bar); 
+        text-align: center; border-radius: 10px; font-weight: 600; 
+        color: var(--text-muted); cursor: pointer; 
+        border: 2px solid transparent; transition: 0.3s; 
+    }
+    
+    .screenshot-thumb {
+        width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color);
+    }
+    
+    #fileNameDisplay { margin-top: 10px; font-size: 0.85rem; color: var(--color-accent); font-weight: 600; }
+
     /* PUAN SWITCH */
-    .points-section { background: #fdfaff; padding: 15px; border-radius: 12px; border: 1px solid #f3e5f5; margin-bottom: 20px; }
+    .points-section { 
+        background: rgba(142, 68, 173, 0.05); /* Morumsu hafif zemin */
+        padding: 15px; border-radius: 12px; 
+        border: 1px solid rgba(142, 68, 173, 0.1); 
+        margin-bottom: 20px; 
+    }
+    .points-text strong { color: var(--text-main); }
+    .points-text p { font-size: 0.8rem; color: var(--text-muted); margin: 3px 0 0 0; }
+
     .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
     .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-    input:checked + .slider { background-color: #8e44ad; }
+    input:checked + .slider { background-color: var(--color-accent); }
     input:checked + .slider:before { transform: translateX(24px); }
-    .delivery-section { background: #fff8e1; padding: 20px; border-radius: 12px; border: 1px solid #ffeeba; margin-bottom: 20px; }
+    
+    /* TESLİMAT BÖLÜMÜ */
+    .delivery-section { 
+        background: rgba(230, 126, 34, 0.05); /* Turuncu hafif zemin */
+        padding: 20px; border-radius: 12px; 
+        border: 1px solid rgba(230, 126, 34, 0.2); 
+        margin-bottom: 20px; 
+    }
 </style>
 {% endblock %}

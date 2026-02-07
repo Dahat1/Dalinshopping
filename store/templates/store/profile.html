@@ -1,19 +1,19 @@
 {% extends 'store/base.html' %}
 
 {% block content %}
-<div class="container" style="max-width: 800px; margin-top: 40px;">
+<div class="container" style="max-width: 800px; margin-top: 40px; margin-bottom: 60px;">
 
     {% if messages %}
         {% for message in messages %}
-        <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #c3e6cb; display: flex; align-items: center; gap: 10px;">
+        <div class="alert-box">
             <span>{{ message }}</span>
         </div>
         {% endfor %}
     {% endif %}
 
     <div class="profile-header">
-        <div style="display: flex; align-items: center; gap: 20px;">
-            <div style="background: white; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: #333;">
+        <div class="header-left">
+            <div class="avatar-circle">
                 👤
             </div>
             <div>
@@ -22,35 +22,35 @@
             </div>
         </div>
         <div class="points-badge">
-            💎 {{ user.profile.dalin_points }} Points
+            💎 {{ user.profile.dalin_points }} {{ t.points_label }}
         </div>
     </div>
 
     <div class="profile-grid">
         
         <div class="info-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="margin: 0; color: #333;">📍 Delivery Details</h3>
-                <button onclick="toggleEdit()" id="editBtn" style="background: none; border: 1px solid #ddd; padding: 5px 15px; border-radius: 20px; cursor: pointer; color: #666; font-size: 0.9rem;">
-                    ✏️ Edit
+            <div class="card-header-row">
+                <h3 style="margin: 0; color: var(--text-main);">📍 {{ t.delivery_details_title }}</h3>
+                <button onclick="toggleEdit()" id="editBtn" class="btn-edit">
+                    ✏️ {{ t.edit_btn }}
                 </button>
             </div>
 
             <div id="viewMode">
                 <div class="info-item">
-                    <label>Phone Number</label>
-                    <p>{{ user.profile.phone|default:"Not set" }}</p>
+                    <label>{{ t.phone_number_label }}</label>
+                    <p>{{ user.profile.phone|default:t.not_set }}</p>
                 </div>
                 <div class="info-item">
-                    <label>City</label>
-                    <p>{{ user.profile.city|default:"Not set" }}</p>
+                    <label>{{ t.city_label }}</label>
+                    <p>{{ user.profile.city|default:t.not_set }}</p>
                 </div>
                 <div class="info-item">
-                    <label>Address</label>
-                    <p>{{ user.profile.address|default:"Not set" }}</p>
+                    <label>{{ t.address_label }}</label>
+                    <p>{{ user.profile.address|default:t.not_set }}</p>
                 </div>
                 <div class="info-item">
-                    <label>Email</label>
+                    <label>{{ t.email_label }}</label>
                     <p>{{ user.email }}</p>
                 </div>
             </div>
@@ -60,36 +60,38 @@
                     {% csrf_token %}
                     
                     <div style="margin-bottom: 15px;">
-                        <label class="form-label">Phone Number</label>
+                        <label class="form-label">{{ t.phone_number_label }}</label>
                         {{ form.phone }}
                     </div>
 
                     <div style="margin-bottom: 15px;">
-                        <label class="form-label">City</label>
+                        <label class="form-label">{{ t.city_label }}</label>
                         {{ form.city }}
                     </div>
 
                     <div style="margin-bottom: 15px;">
-                        <label class="form-label">Full Address</label>
+                        <label class="form-label">{{ t.full_address_label }}</label>
                         {{ form.address }}
                     </div>
 
-                    <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <button type="submit" class="btn-save">Save Changes 💾</button>
-                        <button type="button" onclick="toggleEdit()" class="btn-cancel">Cancel</button>
+                    <div class="action-buttons">
+                        <button type="submit" class="btn-save">{{ t.save_changes_btn }} 💾</button>
+                        <button type="button" onclick="toggleEdit()" class="btn-cancel">{{ t.cancel_btn }}</button>
                     </div>
                 </form>
             </div>
         </div>
 
         <div class="stats-card">
-            <h3 style="margin: 0 0 20px 0; color: #333;">📊 My Stats</h3>
-            <div style="text-align: center; padding: 20px 0; border-bottom: 1px solid #eee;">
-                <span style="font-size: 2rem; font-weight: bold; color: #333;">{{ user.order_set.count }}</span>
-                <p style="margin: 5px 0 0 0; color: #777;">Total Orders</p>
+            <h3 style="margin: 0 0 20px 0; color: var(--text-main);">📊 {{ t.my_stats_title }}</h3>
+            
+            <div class="stat-box">
+                <span class="stat-number">{{ user.order_set.count }}</span>
+                <p class="stat-label">{{ t.total_orders_label }}</p>
             </div>
-            <div style="padding: 20px 0;">
-                <a href="{% url 'my_orders' %}" style="text-decoration: none; color: #ff0055; font-weight: 600;">View All Orders →</a>
+            
+            <div style="padding: 20px 0; text-align: center;">
+                <a href="{% url 'my_orders' %}" class="link-orders">{{ t.view_all_orders }} →</a>
             </div>
         </div>
 
@@ -105,60 +107,97 @@
         if (editMode.style.display === "none") {
             editMode.style.display = "block";
             viewMode.style.display = "none";
-            editBtn.style.display = "none"; // Edit butonunu gizle
+            editBtn.style.display = "none"; 
         } else {
             editMode.style.display = "none";
             viewMode.style.display = "block";
-            editBtn.style.display = "block"; // Geri getir
+            editBtn.style.display = "block"; 
         }
     }
 </script>
 
 <style>
+    /* GENEL YAPI */
+    .alert-box {
+        background: rgba(40, 167, 69, 0.1); 
+        color: #28a745; 
+        padding: 15px; border-radius: 10px; margin-bottom: 20px; 
+        border: 1px solid rgba(40, 167, 69, 0.2); 
+        display: flex; align-items: center; gap: 10px;
+    }
+
+    /* PROFİL BAŞLIĞI */
     .profile-header {
-        background: linear-gradient(135deg, #2c3e50 0%, #000 100%);
-        color: white;
+        background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-bar) 100%);
+        color: var(--text-main);
         padding: 40px;
         border-radius: 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border-color);
+    }
+    
+    .header-left { display: flex; align-items: center; gap: 20px; }
+
+    .avatar-circle {
+        background: var(--bg-body);
+        width: 80px; height: 80px; border-radius: 50%; 
+        display: flex; align-items: center; justify-content: center; 
+        font-size: 2.5rem; color: var(--text-main);
+        border: 2px solid var(--border-color);
     }
     
     .points-badge {
-        background: #ff0055;
+        background: var(--color-accent);
         color: white;
         padding: 10px 20px;
         border-radius: 30px;
         font-weight: bold;
         font-size: 1.1rem;
-        box-shadow: 0 5px 15px rgba(255, 0, 85, 0.4);
+        box-shadow: 0 5px 15px rgba(255, 143, 163, 0.4);
     }
 
+    /* GRID YAPISI */
     .profile-grid {
         display: grid;
         grid-template-columns: 2fr 1fr; /* Sol geniş, sağ dar */
         gap: 30px;
     }
 
+    /* KARTLAR */
     .info-card, .stats-card {
-        background: white;
+        background: var(--bg-surface);
         padding: 30px;
         border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border-color);
     }
 
+    .card-header-row {
+        display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+    }
+
+    .btn-edit {
+        background: none; border: 1px solid var(--border-color); 
+        padding: 5px 15px; border-radius: 20px; cursor: pointer; 
+        color: var(--text-muted); font-size: 0.9rem; transition: 0.3s;
+        font-family: inherit;
+    }
+    .btn-edit:hover { background: var(--bg-bar); color: var(--color-accent); border-color: var(--color-accent); }
+
+    /* BİLGİ MADDELERİ */
     .info-item {
         margin-bottom: 20px;
-        border-bottom: 1px solid #f9f9f9;
+        border-bottom: 1px solid var(--border-color);
         padding-bottom: 10px;
     }
     .info-item label {
         display: block;
         font-size: 0.85rem;
-        color: #888;
+        color: var(--text-muted);
         margin-bottom: 5px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -166,16 +205,28 @@
     .info-item p {
         margin: 0;
         font-size: 1.1rem;
-        color: #333;
+        color: var(--text-main);
         font-weight: 500;
     }
 
+    /* FORM ELEMANLARI */
     .form-label {
         font-weight: 600;
         display: block;
         margin-bottom: 8px;
-        color: #555;
+        color: var(--text-main);
     }
+    
+    /* Inputlar form.py'den geliyor ama genel stil veriyoruz */
+    input[type="text"], input[type="number"], select, textarea {
+        width: 100%; padding: 10px; border-radius: 8px; 
+        border: 1px solid var(--border-color);
+        background: var(--bg-body); color: var(--text-main);
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+
+    .action-buttons { display: flex; gap: 10px; margin-top: 20px; }
 
     .btn-save {
         background: #28a745;
@@ -185,17 +236,31 @@
         border-radius: 8px;
         cursor: pointer;
         font-weight: bold;
-        flex: 1;
+        flex: 1; transition: 0.3s;
     }
+    .btn-save:hover { background: #218838; transform: translateY(-2px); }
+
     .btn-cancel {
-        background: #f8f9fa;
-        color: #333;
-        border: 1px solid #ddd;
+        background: var(--bg-bar);
+        color: var(--text-main);
+        border: 1px solid var(--border-color);
         padding: 12px 25px;
         border-radius: 8px;
         cursor: pointer;
-        font-weight: bold;
+        font-weight: bold; transition: 0.3s;
     }
+    .btn-cancel:hover { background: var(--border-color); }
+
+    /* İSTATİSTİKLER */
+    .stat-box {
+        text-align: center; padding: 20px 0; 
+        border-bottom: 1px solid var(--border-color);
+    }
+    .stat-number { font-size: 2rem; font-weight: bold; color: var(--text-main); }
+    .stat-label { margin: 5px 0 0 0; color: var(--text-muted); }
+
+    .link-orders { text-decoration: none; color: var(--color-accent); font-weight: 600; transition: 0.3s; }
+    .link-orders:hover { text-decoration: underline; }
 
     /* MOBİL İÇİN AYAR */
     @media (max-width: 768px) {

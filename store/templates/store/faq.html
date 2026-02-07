@@ -4,59 +4,59 @@
 <div class="container" style="max-width: 800px; margin-top: 60px; margin-bottom: 80px;">
     
     <div style="text-align: center; margin-bottom: 50px;">
-        <h1 style="color: #333; font-weight: 800;">Frequently Asked Questions</h1>
-        <p style="color: #666; font-size: 1.1rem;">Everything you need to know about ordering with us.</p>
+        <h1 style="color: var(--text-main); font-weight: 800;">{{ t.faq_title }}</h1>
+        <p style="color: var(--text-muted); font-size: 1.1rem;">{{ t.faq_subtitle }}</p>
     </div>
 
     <div class="faq-container">
         
         <div class="faq-item">
             <button class="faq-question">
-                How long does shipping take?
+                {{ t.faq_q1 }}
                 <span class="icon">+</span>
             </button>
             <div class="faq-answer">
-                <p>Orders usually arrive within <strong>15 to 20 days</strong> after confirmation. We handle all customs and shipping procedures for you.</p>
+                <p>{{ t.faq_a1 }}</p>
             </div>
         </div>
 
         <div class="faq-item">
             <button class="faq-question">
-                Is there an extra fee for weight?
+                {{ t.faq_q2 }}
                 <span class="icon">+</span>
             </button>
             <div class="faq-answer">
-                <p>No! Unlike others, we offer <strong>FREE weight fees</strong> for orders under 10kg. You only pay the product price (calculated at our 1.20 rate) + local delivery fee.</p>
+                <p>{{ t.faq_a2 }}</p>
             </div>
         </div>
 
         <div class="faq-item">
             <button class="faq-question">
-                How do I pay?
+                {{ t.faq_q3 }}
                 <span class="icon">+</span>
             </button>
             <div class="faq-answer">
-                <p>We use a <strong>Cash on Delivery (COD)</strong> system. You don't need a credit card. You pay the total amount in IQD when the courier delivers your package to your doorstep.</p>
+                <p>{{ t.faq_a3 }}</p>
             </div>
         </div>
 
         <div class="faq-item">
             <button class="faq-question">
-                Can I cancel my order?
+                {{ t.faq_q4 }}
                 <span class="icon">+</span>
             </button>
             <div class="faq-answer">
-                <p>Yes, you can cancel your order while it is in "Pending" status. Once the order is "Approved" or "Shipped", cancellation is not possible as the items have already been purchased.</p>
+                <p>{{ t.faq_a4 }}</p>
             </div>
         </div>
 
         <div class="faq-item">
             <button class="faq-question">
-                How does the Dalin Points system work?
+                {{ t.faq_q5 }}
                 <span class="icon">+</span>
             </button>
             <div class="faq-answer">
-                <p>Every time you order, you earn points! <strong>1000 IQD spent = 1 Point</strong>. You can use these points to get discounts on your future orders. 1 Point gives you a 25 IQD discount.</p>
+                <p>{{ t.faq_a5 }}</p>
             </div>
         </div>
 
@@ -65,7 +65,7 @@
 </div>
 
 <script>
-    // Akordeon Aç/Kapa Mantığı
+    // Akordeon Aç/Kapa Mantığı (Aynen korundu)
     var acc = document.getElementsByClassName("faq-question");
     var i;
 
@@ -75,6 +75,7 @@
             var panel = this.nextElementSibling;
             if (panel.style.maxHeight) {
                 panel.style.maxHeight = null;
+                // İkonlar text olduğu için çeviriye gerek yok (+/- evrenseldir)
                 this.querySelector('.icon').innerText = "+";
             } else {
                 panel.style.maxHeight = panel.scrollHeight + "px";
@@ -85,18 +86,20 @@
 </script>
 
 <style>
+    /* Değişkenler Base.html'den geliyor */
+    
     .faq-item {
         margin-bottom: 15px;
-        border-bottom: 1px solid #eee;
+        border-bottom: 1px solid var(--border-color); 
     }
     .faq-question {
-        background-color: white;
-        color: #333;
+        background-color: var(--bg-surface); 
+        color: var(--text-main);             
         cursor: pointer;
         padding: 20px;
         width: 100%;
         border: none;
-        text-align: left;
+        text-align: left; /* RTL durumunda base.html'deki dir="rtl" bunu otomatik sağa yaslar */
         outline: none;
         font-size: 1.1rem;
         font-weight: 600;
@@ -105,17 +108,27 @@
         justify-content: space-between;
         align-items: center;
         border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        
+        /* Font Translations'dan (base.html) geliyor */
+        font-family: inherit; 
     }
+    
+    /* Hover */
     .faq-question:hover {
-        background-color: #f9f9f9;
-        color: #ff0055;
+        background-color: var(--bg-bar);    
+        color: var(--color-accent);         
     }
+    
+    /* Aktif */
     .faq-question.active {
-        color: #ff0055;
+        color: var(--color-accent);
+        font-weight: 800;
     }
+    
     .faq-answer {
         padding: 0 20px;
-        background-color: white;
+        background-color: var(--bg-surface); 
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.3s ease-out;
@@ -123,11 +136,12 @@
     .faq-answer p {
         padding: 20px 0;
         line-height: 1.6;
-        color: #555;
+        color: var(--text-muted);            
     }
     .icon {
         font-size: 1.5rem;
         font-weight: bold;
+        color: var(--color-accent);          
     }
 </style>
 {% endblock %}
